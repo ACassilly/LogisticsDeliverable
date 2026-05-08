@@ -2,19 +2,10 @@ import Booking, { BookingStatus, type IBooking } from '@/server/db/models/bookin
 import { connectDB } from '@/server/db'
 
 export interface CreateBookingData {
-  email: string
-  pickup: IBooking['pickup']
-  delivery: IBooking['delivery']
-  items: IBooking['items']
-  carrierName: string
-  carrierCode?: string
-  quoteId: string
-  totalRate: number
-  charges: { name: string; amount: number }[]
-  transitDays?: string
-  estimatedDeliveryDate?: string
-  serviceType?: string
-  stripeSessionId: string
+  email: string; pickup: IBooking['pickup']; delivery: IBooking['delivery']; items: IBooking['items'];
+  carrierName: string; carrierCode?: string; quoteId: string; totalRate: number;
+  charges: { name: string; amount: number }[];
+  transitDays?: string; estimatedDeliveryDate?: string; serviceType?: string; stripeSessionId: string;
 }
 
 export async function createBooking(data: CreateBookingData): Promise<IBooking> {
@@ -24,11 +15,7 @@ export async function createBooking(data: CreateBookingData): Promise<IBooking> 
 
 export async function updateBookingPayment(stripeSessionId: string, paymentIntentId: string | null, status: BookingStatus): Promise<IBooking | null> {
   await connectDB()
-  return Booking.findOneAndUpdate(
-    { stripeSessionId },
-    { ...(paymentIntentId ? { paymentIntentId } : {}), status },
-    { returnDocument: 'after' }
-  )
+  return Booking.findOneAndUpdate({ stripeSessionId }, { ...(paymentIntentId ? { paymentIntentId } : {}), status }, { returnDocument: 'after' })
 }
 
 export async function getBookingByStripeSession(stripeSessionId: string): Promise<IBooking | null> {

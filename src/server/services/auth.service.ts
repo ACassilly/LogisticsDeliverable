@@ -38,15 +38,12 @@ export async function createUserByAdmin(data: CreateUserByAdminInput) {
   return { ...userWithoutPassword, _id: user._id.toString() };
 }
 
-export async function listUsers({ role, page = 1, limit = 20 }: { role?: string; page?: number; limit?: number }) {
+export async function listUsers({ role, page = 1, limit = 20 }: { role?: string; page?: number; limit?: number; }) {
   await connectDB();
   const filter = role ? { role } : {};
   const skip = (page - 1) * limit;
-  const [users, total] = await Promise.all([
-    User.find(filter).select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-    User.countDocuments(filter),
-  ]);
-  return { data: users.map((u) => ({ ...u, _id: u._id.toString() })), pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } };
+  const [users, total] = await Promise.all([User.find(filter).select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(), User.countDocuments(filter)]);
+  return { data: users.map(u => ({ ...u, _id: u._id.toString() })), pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } };
 }
 
 export async function getUserByEmail(email: string) {

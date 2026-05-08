@@ -3,23 +3,8 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
-if (!JWT_SECRET || JWT_SECRET === 'your-secret-key-change-in-production') {
-  console.warn('⚠️  Warning: JWT_SECRET is not set or using default value. Please set it in .env.local');
-}
-
-export interface JWTPayload {
-  id: string;
-  email: string;
-  role?: string;
-  name?: string;
-}
-
-export interface AuthUser {
-  id: string;
-  email: string;
-  role?: string;
-  name?: string;
-}
+export interface JWTPayload { id: string; email: string; role?: string; name?: string; }
+export interface AuthUser { id: string; email: string; role?: string; name?: string; }
 
 function extractToken(request: NextRequest): string | null {
   const authHeader = request.headers.get('authorization');
@@ -32,12 +17,7 @@ function verifyToken(token: string): AuthUser | null {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
     return { id: decoded.id, email: decoded.email, role: decoded.role, name: decoded.name };
-  } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) console.error('Invalid JWT token:', error.message);
-    else if (error instanceof jwt.TokenExpiredError) console.error('JWT token expired:', error.message);
-    else console.error('JWT verification error:', error);
-    return null;
-  }
+  } catch { return null; }
 }
 
 export async function withAuth(request: NextRequest): Promise<AuthUser | null> {
