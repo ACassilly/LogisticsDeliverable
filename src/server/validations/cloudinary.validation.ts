@@ -4,7 +4,8 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export const uploadFileSchema = z.object({
-  file: z.instanceof(File)
+  file: z
+    .instanceof(File)
     .refine((file) => file.size > 0, 'File is required')
     .refine((file) => file.size <= MAX_FILE_SIZE, `File size must be less than ${MAX_FILE_SIZE / 1024 / 1024}MB`)
     .refine((file) => ALLOWED_IMAGE_TYPES.includes(file.type), 'File must be an image (JPEG, PNG, WebP, or GIF)'),

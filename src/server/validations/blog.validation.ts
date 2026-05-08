@@ -4,35 +4,39 @@ import { BlogCategory } from '@/server/db/models/blog.model';
 export const blogCategorySchema = z.nativeEnum(BlogCategory);
 const normalizedBlogCategorySchema = z.string().trim().toLowerCase().pipe(blogCategorySchema);
 
-export const slugSchema = z.string().min(1, 'Slug is required').max(200, 'Slug cannot exceed 200 characters').regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase letters, numbers, and hyphens only');
+export const slugSchema = z
+  .string()
+  .min(1, 'Slug is required')
+  .max(200, 'Slug cannot exceed 200 characters')
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase letters, numbers, and hyphens only');
 
 export const createDraftBlogSchema = z.object({
-  title: z.string().max(200).trim().optional().or(z.literal('')),
+  title: z.string().max(200, 'Title cannot exceed 200 characters').trim().optional().or(z.literal('')),
   content: z.string().trim().optional().or(z.literal('')),
-  excerpt: z.string().max(500).trim().optional().or(z.literal('')),
+  excerpt: z.string().max(500, 'Excerpt cannot exceed 500 characters').trim().optional().or(z.literal('')),
   category: z.union([normalizedBlogCategorySchema, z.literal(''), z.undefined()]).optional(),
-  tags: z.array(z.string().trim().min(1)).max(10).optional().default([]),
-  imageUrl: z.string().url().optional().or(z.literal('')),
+  tags: z.array(z.string().trim().min(1, 'Tag cannot be empty')).max(10, 'Cannot have more than 10 tags').optional().default([]),
+  imageUrl: z.string().url('Image URL must be a valid URL').optional().or(z.literal('')),
   published: z.boolean().optional().default(false),
 }).refine((data) => (data.title && data.title.trim().length > 0) || (data.content && data.content.trim().length > 0), { message: 'Either title or content must be provided for a draft' });
 
 export const createBlogSchema = z.object({
-  title: z.string().min(2).max(200).trim(),
-  content: z.string().min(10).trim(),
-  excerpt: z.string().max(500).trim().optional(),
+  title: z.string().min(2, 'Title must be at least 2 characters').max(200, 'Title cannot exceed 200 characters').trim(),
+  content: z.string().min(10, 'Content must be at least 50 characters').trim(),
+  excerpt: z.string().max(500, 'Excerpt cannot exceed 500 characters').trim().optional(),
   category: normalizedBlogCategorySchema,
-  tags: z.array(z.string().trim().min(1)).max(10).optional().default([]),
-  imageUrl: z.string().url().optional().or(z.literal('')),
+  tags: z.array(z.string().trim().min(1, 'Tag cannot be empty')).max(10, 'Cannot have more than 10 tags').optional().default([]),
+  imageUrl: z.string().url('Image URL must be a valid URL').optional().or(z.literal('')),
   published: z.boolean().optional().default(false),
 });
 
 export const updateBlogSchema = z.object({
-  title: z.string().min(2).max(200).trim().optional(),
-  content: z.string().min(10).trim().optional(),
-  excerpt: z.string().max(500).trim().optional().or(z.literal('')),
+  title: z.string().min(2, 'Title must be at least 2 characters').max(200, 'Title cannot exceed 200 characters').trim().optional(),
+  content: z.string().min(10, 'Content must be at least 50 characters').trim().optional(),
+  excerpt: z.string().max(500, 'Excerpt cannot exceed 500 characters').trim().optional().or(z.literal('')),
   category: normalizedBlogCategorySchema.optional(),
-  tags: z.array(z.string().trim().min(1)).max(10).optional(),
-  imageUrl: z.string().url().optional().or(z.literal('')),
+  tags: z.array(z.string().trim().min(1, 'Tag cannot be empty')).max(10, 'Cannot have more than 10 tags').optional(),
+  imageUrl: z.string().url('Image URL must be a valid URL').optional().or(z.literal('')),
   published: z.boolean().optional(),
   slug: slugSchema.optional(),
 });
