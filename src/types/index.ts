@@ -1,6 +1,17 @@
+/**
+ * Shared TypeScript types and interfaces
+ * Define common types used across the application
+ */
+
+// Booking types
 export * from "./booking.types"
+
+// Quote / GTZShip types
 export * from "./quote.types"
 
+/**
+ * Generic API Response wrapper
+ */
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data: T;
@@ -8,6 +19,9 @@ export interface ApiResponse<T = unknown> {
   error?: string;
 }
 
+/**
+ * User Role enum — Portlandia Logistics multi-role portal
+ */
 export enum UserRole {
   ADMIN = 'ADMIN',
   AGENT = 'AGENT',
@@ -17,6 +31,9 @@ export enum UserRole {
   LEADERSHIP = 'LEADERSHIP',
 }
 
+/**
+ * Role-to-portal route mapping
+ */
 export const ROLE_PORTAL_MAP: Record<UserRole, string> = {
   [UserRole.ADMIN]: '/admin/portal',
   [UserRole.AGENT]: '/portal/agent',
@@ -26,6 +43,9 @@ export const ROLE_PORTAL_MAP: Record<UserRole, string> = {
   [UserRole.LEADERSHIP]: '/portal/leadership',
 };
 
+/**
+ * User type
+ */
 export interface User {
   id: string;
   name: string;
@@ -37,6 +57,9 @@ export interface User {
   updatedAt?: string;
 }
 
+/**
+ * JWT token payload shape
+ */
 export interface TokenPayload {
   userId: string;
   email: string;
@@ -45,6 +68,9 @@ export interface TokenPayload {
   exp?: number;
 }
 
+/**
+ * Blog Category enum
+ */
 export enum BlogCategory {
   LTL = 'ltl',
   FTL = 'ftl',
@@ -52,6 +78,9 @@ export enum BlogCategory {
   DRAYAGE = 'drayage',
 }
 
+/**
+ * Blog interface
+ */
 export interface Blog {
   _id: string;
   title: string;
@@ -68,6 +97,9 @@ export interface Blog {
   readingTime?: number;
 }
 
+/**
+ * Blog filters for querying
+ */
 export interface BlogFilters {
   published?: boolean;
   category?: BlogCategory;
@@ -76,12 +108,18 @@ export interface BlogFilters {
   [key: string]: unknown;
 }
 
+/**
+ * Pagination params
+ */
 export interface PaginationParams {
   page?: number;
   limit?: number;
   [key: string]: unknown;
 }
 
+/**
+ * Paginated response
+ */
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: {
@@ -92,6 +130,9 @@ export interface PaginatedResponse<T> {
   };
 }
 
+/**
+ * Service types
+ */
 export type ServiceType = 'ltl' | 'ftl' | 'intermodal' | 'drayage';
 
 export interface Button {
@@ -104,13 +145,51 @@ export interface ServiceData {
   slug: ServiceType;
   title: string;
   shortDescription: string;
-  hero: { title: string; description: string; imageUrl: string; highlights: string[]; buttons: Button[]; };
-  whyChoose: { title: string; subtitle: string; items: Array<{ title: string; description: string; icon: string; }>; };
-  whatIs: { title: string; description: string; imageUrl: string; buttonText: string; buttonLink: string; };
-  book: { title: string; description: string; buttonText: string; buttonLink: string; youtubeUrl: string; };
-  builtFor: { title: string; imageUrl: string; items: Array<{ title: string; description: string; }>; buttonText: string; buttonLink: string; };
+  hero: {
+    title: string;
+    description: string;
+    imageUrl: string;
+    highlights: string[];
+    buttons: Button[];
+  };
+  whyChoose: {
+    title: string;
+    subtitle: string;
+    items: Array<{
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
+  whatIs: {
+    title: string;
+    description: string;
+    imageUrl: string;
+    buttonText: string;
+    buttonLink: string;
+  };
+  book: {
+    title: string;
+    description: string;
+    buttonText: string;
+    buttonLink: string;
+    youtubeUrl: string;
+  };
+  builtFor: {
+    title: string;
+    imageUrl: string;
+    items: Array<{
+      title: string;
+      description: string;
+    }>;
+    buttonText: string;
+    buttonLink: string;
+  };
 }
 
+/**
+ * Cloudinary upload response
+ */
 export interface CloudinaryUploadResponse {
   url: string;
   publicId: string;
@@ -120,6 +199,9 @@ export interface CloudinaryUploadResponse {
   size: number;
 }
 
+/**
+ * Contact form submission response from /api/contact
+ */
 export interface ContactSubmissionResponse {
   success: boolean;
   data?: { leadId: number };

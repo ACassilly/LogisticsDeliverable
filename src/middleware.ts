@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { UserRole, ROLE_PORTAL_MAP } from '@/types';
 
+/**
+ * Role-protected route prefixes
+ */
 const ROLE_PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/admin': [UserRole.ADMIN],
   '/portal/agent': [UserRole.AGENT, UserRole.ADMIN],
@@ -11,34 +14,58 @@ const ROLE_PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/portal/leadership': [UserRole.LEADERSHIP, UserRole.ADMIN],
 };
 
-const PUBLIC_ROUTES = ['/admin/login', '/login', '/signup', '/quote', '/track'];
+/**
+ * Public routes that never require auth
+ */
+const PUBLIC_ROUTES = [
+  '/admin/login',
+  '/login',
+  '/signup',
+  '/quote',
+  '/track',
+];
 
+/**
+ * Decode role from token cookie (base64 JSON payload — full JWT verify in API routes)
+ */
 function getRoleFromToken(token: string): UserRole | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
     const payload = JSON.parse(atob(parts[1]));
     const role = payload?.role as string;
-    if (Object.values(UserRole).includes(role as UserRole)) return role as UserRole;
+    if (Object.values(UserRole).includes(role as UserRole)) {
+      return role as UserRole;
+    }
     return null;
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 }
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Always allow public routes
   if (PUBLIC_ROUTES.some(r => pathname.startsWith(r))) {
+    // If already authenticated and hitting login, redirect to their portal
     if (pathname === '/login' || pathname === '/admin/login') {
-      const token = request.cookies.get('auth_token')?.value || request.cookies.get('admin_token')?.value;
+      const token = request.cookies.get('auth_token')?.value
+        || request.cookies.get('admin_token')?.value;
       if (token) {
         const role = getRoleFromToken(token);
-        if (role) return NextResponse.redirect(new URL(ROLE_PORTAL_MAP[role], request.url));
+        if (role) {
+          return NextResponse.redirect(new URL(ROLE_PORTAL_MAP[role], request.url));
+        }
       }
     }
     return NextResponse.next();
   }
 
-  const matchedPrefix = Object.keys(ROLE_PROTECTED_ROUTES).find(prefix => pathname.startsWith(prefix));
+  // Check if route requires role protection
+  const matchedPrefix = Object.keys(ROLE_PROTECTED_ROUTES).find(prefix =>
+    pathname.startsWith(prefix)
+  );
 
   if (matchedPrefix) {
     const token = request.cookies.get('auth_token')?.value
@@ -48,6 +75,7 @@ export function middleware(request: NextRequest) {
         : null);
 
     if (!token) {
+      // Redirect to login with return URL
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
@@ -57,7 +85,10 @@ export function middleware(request: NextRequest) {
     const allowedRoles = ROLE_PROTECTED_ROUTES[matchedPrefix];
 
     if (!role || !allowedRoles.includes(role)) {
-      if (role) return NextResponse.redirect(new URL(ROLE_PORTAL_MAP[role], request.url));
+      // Wrong role — redirect to their correct portal or login
+      if (role) {
+        return NextResponse.redirect(new URL(ROLE_PORTAL_MAP[role], request.url));
+      }
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }
@@ -66,5 +97,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/portal/:path*', '/login', '/admin/login'],
+  matcher: [
+    '/admin/:path*',
+    '/portal/:path*',
+    '/login',
+    '/admin/login',
+  ],
 };

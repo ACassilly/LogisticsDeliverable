@@ -1,0 +1,374 @@
+{
+  "ltl": {
+    "slug": "ltl",
+    "title": "LTL Freight Shipping Service",
+    "shortDescription": "Cost-effective shipping solutions for smaller freight loads",
+    "hero": {
+      "title": "LTL Freight Shipping Service",
+      "description": "Portlandia Logistics' LTL services help you ship smart, combining access to a broad carrier network, powerful digital tools, and dedicated support to get your freight where it needs to go without the overhead of full-truckload costs.",
+      "imageUrl": "/images/services/ltl-hero.png",
+      "highlights": [
+        "Competitive lane pricing",
+        "Nationwide carrier network",
+        "On-time, end-to-end execution"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics LTL?",
+      "subtitle": "Reliable coverage, simplified booking, and full visibility designed to move your freight efficiently without added complexity.",
+      "items": [
+        {
+          "title": "Nationwide Network",
+          "description": "Access a trusted network of regional and national carriers that ensures consistent capacity wherever you ship.",
+          "icon": "Globe"
+        },
+        {
+          "title": "Fast, Easy Booking",
+          "description": "Get instant quotes and book shipments in minutes through a streamlined digital experience.",
+          "icon": "Zap"
+        },
+        {
+          "title": "Hassle-Free Coordination",
+          "description": "We manage carrier communication, pickup, and delivery so you don't have to.",
+          "icon": "Handshake"
+        },
+        {
+          "title": "Real-Time Visibility",
+          "description": "Track shipments and performance with clear, real-time data from pickup to delivery.",
+          "icon": "Eye"
+        },
+        {
+          "title": "Extensive Carrier Coverage",
+          "description": "Leverage a broad, vetted carrier network that delivers consistent LTL capacity across regions.",
+          "icon": "Truck"
+        },
+        {
+          "title": "End-to-End Management",
+          "description": "Our team oversees every shipment detail to ensure smooth execution from pickup to delivery.",
+          "icon": "BarChart3"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is LTL Shipping?",
+      "description": "Less-Than-Truckload (LTL) shipping is the economical way to move freight that's too large for parcel carriers but not enough to fill an entire truck. Your goods share space with other shipments, and costs are calculated based on the space used and handling requirements.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified LTL Shipping",
+      "description": "We make LTL shipping straightforward and predictable. With Portlandia Logistics, our guided booking experience walks you through quoting and scheduling step by step helping reduce guesswork around freight details, service options, and delivery requirements.",
+      "buttonText": "Book your LTL Now →",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Every Shipment",
+      "imageUrl": "/images/services/built-for-ltl.png",
+      "items": [
+        {
+          "title": "Easy Digital Experience",
+          "description": "Our platform offers a guided workflow for quoting and booking that takes the guesswork out of freight class, accessorials, and delivery options so you ship confidently every time."
+        },
+        {
+          "title": "Reliable Coverage",
+          "description": "We pair your freight with quality carriers that match your timeline and budget  helping you control costs without sacrificing service levels."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "ftl": {
+    "slug": "ftl",
+    "title": "FTL Freight Shipping Service",
+    "shortDescription": "Dedicated truck services for large shipments and time-sensitive deliveries",
+    "hero": {
+      "title": "FTL Freight Shipping Service",
+      "description": "Portlandia Logistics' FTL services provide dedicated truckload capacity for your large shipments, combining speed, security, and reliability. Get your freight delivered faster with dedicated trucks and drivers focused solely on your cargo.",
+      "imageUrl": "/images/services/ltl-hero.png",
+      "highlights": [
+        "Direct point-to-point delivery",
+        "Faster transit times",
+        "Enhanced cargo security"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics FTL?",
+      "subtitle": "Dedicated capacity, direct delivery, and maximum security designed to move your full truckload freight efficiently and reliably.",
+      "items": [
+        {
+          "title": "Dedicated Capacity",
+          "description": "Access reliable full truckload capacity with our extensive carrier network ensuring trucks when you need them.",
+          "icon": "TruckIcon"
+        },
+        {
+          "title": "Direct Delivery",
+          "description": "Point-to-point transportation with no stops, ensuring your freight arrives faster and safer.",
+          "icon": "Zap"
+        },
+        {
+          "title": "Complete Freight Security",
+          "description": "Your shipment stays on one truck from pickup to delivery, minimizing handling and damage risk.",
+          "icon": "Lock"
+        },
+        {
+          "title": "24/7 Tracking",
+          "description": "Monitor your shipment in real-time with GPS tracking and receive updates throughout the journey.",
+          "icon": "MapPin"
+        },
+        {
+          "title": "Flexible Equipment Options",
+          "description": "Choose from dry vans, refrigerated trailers, flatbeds, and specialized equipment to meet your needs.",
+          "icon": "Settings"
+        },
+        {
+          "title": "Expedited Service Available",
+          "description": "Team drivers and expedited options ensure time-critical shipments arrive on schedule.",
+          "icon": "Clock"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is FTL Shipping?",
+      "description": "Full Truckload (FTL) shipping dedicates an entire truck exclusively to your freight. This service is ideal for large shipments, time-sensitive deliveries, or when you need the security and speed of direct transportation from origin to destination.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified FTL Shipping",
+      "description": "We make FTL shipping straightforward and reliable. With Portlandia Logistics, our dedicated booking platform connects you with trusted carriers, provides transparent pricing, and manages every detail from pickup to delivery ensuring your full truckload shipments move seamlessly.",
+      "buttonText": "Book your FTL Now →",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Every Shipment",
+      "imageUrl": "/images/services/built-for-ltl.png",
+      "items": [
+        {
+          "title": "Dedicated Capacity",
+          "description": "Access to reliable carriers with the right equipment for your shipment. From dry vans to specialized trailers, we match your freight with the perfect truck every time."
+        },
+        {
+          "title": "Complete Transparency",
+          "description": "Real-time tracking, clear communication, and proactive updates throughout your shipment's journey giving you complete visibility and peace of mind."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "intermodal": {
+    "slug": "intermodal",
+    "title": "Intermodal Transportation Service",
+    "shortDescription": "Efficient multi-modal shipping combining rail and truck transport",
+    "hero": {
+      "title": "Intermodal Transportation Service",
+      "description": "Portlandia Logistics' Intermodal services combine the cost efficiency of rail with the flexibility of truck transport, delivering sustainable and economical solutions for long-haul freight across the country.",
+      "imageUrl": "/images/services/ltl-hero.png",
+      "highlights": [
+        "Up to 30% cost savings vs. OTR",
+        "Reduced carbon emissions",
+        "Reliable rail schedules"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Intermodal?",
+      "subtitle": "Cost-effective rail solutions, environmental sustainability, and seamless coordination designed to optimize your long-haul freight shipping.",
+      "items": [
+        {
+          "title": "Significant Cost Savings",
+          "description": "Save up to 30% compared to over-the-road trucking on long-haul shipments through efficient rail transport.",
+          "icon": "DollarSign"
+        },
+        {
+          "title": "Eco-Friendly Shipping",
+          "description": "Reduce carbon emissions by up to 75% per ton-mile compared to traditional trucking methods.",
+          "icon": "Leaf"
+        },
+        {
+          "title": "Reliable Rail Schedules",
+          "description": "Benefit from predictable transit times with our partnerships with major Class I railroads.",
+          "icon": "Train"
+        },
+        {
+          "title": "Complete Visibility",
+          "description": "Track your containers throughout the entire journey with real-time updates from rail to final delivery.",
+          "icon": "Eye"
+        },
+        {
+          "title": "Seamless Transitions",
+          "description": "Our integrated drayage services ensure smooth handoffs between rail terminals and your facilities.",
+          "icon": "RefreshCw"
+        },
+        {
+          "title": "Peak Season Capacity",
+          "description": "Access reliable capacity even during truck shortages with our extensive rail network.",
+          "icon": "TrendingUp"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Intermodal Transportation?",
+      "description": "Intermodal transportation combines rail and truck to move freight efficiently over long distances. By using rail for the long-haul portion and trucks for pickup and delivery, this method offers significant cost savings and environmental benefits while maintaining reliable service.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Intermodal Shipping",
+      "description": "We make intermodal shipping straightforward and sustainable. With Portlandia Logistics, our comprehensive platform manages rail coordination, drayage scheduling, and container tracking from origin to destination making long-haul freight both economical and environmentally responsible.",
+      "buttonText": "Book your Intermodal Now →",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Every Shipment",
+      "imageUrl": "/images/services/built-for-ltl.png",
+      "items": [
+        {
+          "title": "Cost-Effective Long Haul",
+          "description": "Rail provides significant cost advantages for shipments over 750 miles, with predictable pricing and reliable transit times that help you plan and budget effectively."
+        },
+        {
+          "title": "Sustainable Solution",
+          "description": "Reduce your carbon footprint by up to 75% compared to over-the-road trucking while maintaining service quality and on-time delivery performance."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "drayage": {
+    "slug": "drayage",
+    "title": "Drayage Services",
+    "shortDescription": "Short-distance container transport to and from ports and rail yards",
+    "hero": {
+      "title": "Professional Drayage Services",
+      "description": "Portlandia Logistics' Drayage services ensure efficient container movement to and from ports and rail terminals. Our experienced drivers and modern equipment handle the critical first and last mile of your intermodal shipments.",
+      "imageUrl": "/images/services/ltl-hero.png",
+      "highlights": [
+        "Port-certified drivers",
+        "Chassis fleet access",
+        "24/7 terminal operations"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Drayage?",
+      "subtitle": "Port expertise, fast turnaround, and complete compliance designed to keep your containers moving efficiently through critical first and last mile.",
+      "items": [
+        {
+          "title": "Port-Certified Drivers",
+          "description": "Our experienced, certified drivers navigate complex port operations and terminal requirements with ease.",
+          "icon": "Anchor"
+        },
+        {
+          "title": "Quick Container Pickup",
+          "description": "Fast turnaround times minimize dwell fees and keep your supply chain moving without delays.",
+          "icon": "Zap"
+        },
+        {
+          "title": "Chassis Pool Access",
+          "description": "Direct access to chassis equipment ensures no delays waiting for availability at terminals.",
+          "icon": "Link"
+        },
+        {
+          "title": "24/7 Terminal Coverage",
+          "description": "Round-the-clock operations ensure your containers move regardless of terminal hours or schedules.",
+          "icon": "Clock"
+        },
+        {
+          "title": "Full Regulatory Compliance",
+          "description": "Licensed, insured, and bonded with complete adherence to all port regulations and safety standards.",
+          "icon": "CheckCircle"
+        },
+        {
+          "title": "Detention Management",
+          "description": "Strategic planning and coordination to minimize costly detention and demurrage charges.",
+          "icon": "ClipboardCheck"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Drayage?",
+      "description": "Drayage is the short-distance transport of shipping containers between ports, rail terminals, and your facility—typically within a 50-mile radius. It's the critical first and last mile connection in the intermodal supply chain, ensuring your containers move efficiently through the transportation network.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Drayage Services",
+      "description": "We make drayage straightforward and efficient. With Portlandia Logistics, our experienced team handles port appointments, chassis management, and terminal coordination ensuring your containers move quickly through the critical first and last mile without costly delays.",
+      "buttonText": "Book your Drayage Now →",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Every Shipment",
+      "imageUrl": "/images/services/built-for-ltl.png",
+      "items": [
+        {
+          "title": "Port Expertise",
+          "description": "Our certified drivers and operations team navigate complex terminal requirements, ensuring fast turnaround times and minimal dwell fees at major ports and rail yards."
+        },
+        {
+          "title": "Detention Avoidance",
+          "description": "Strategic planning and coordination minimize costly detention and demurrage charges through efficient scheduling and proactive container management."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  }
+}

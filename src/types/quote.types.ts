@@ -1,6 +1,11 @@
 /**
  * GTZShip Rate API Types
+ * Types for the GTZShip LTL Rate API integration
  */
+
+// ============================================================
+// GTZShip API Request Types
+// ============================================================
 
 export interface GTZShipAddress {
   Street?: string
@@ -46,6 +51,10 @@ export interface GTZShipRateRequest {
   Items: GTZShipItem[]
   Accessorials?: number[]
 }
+
+// ============================================================
+// GTZShip API Response Types
+// ============================================================
 
 export interface GTZShipCarrierDetail {
   CarrierId?: string
@@ -119,6 +128,11 @@ export interface GTZShipRateResponse {
   QuickestTransitRate: GTZShipRateDetail | null
 }
 
+// ============================================================
+// GTZShip V2 API Types (All Carrier Rates)
+// ============================================================
+
+/** V2 carrier detail — includes performance metrics & carrier code */
 export interface GTZShipV2CarrierDetail {
   CarrierId?: string
   CarrierName?: string
@@ -129,12 +143,14 @@ export interface GTZShipV2CarrierDetail {
   CarrierExceptionforGTZ?: string
 }
 
+/** V2 charge breakdown */
 export interface GTZShipV2Charge {
   AccessorialID?: string
   Name?: string
   Charge?: string
 }
 
+/** V2 guaranteed rate option */
 export interface GTZShipV2GuaranteedRate {
   CarrierId?: string
   Amount?: string
@@ -144,11 +160,13 @@ export interface GTZShipV2GuaranteedRate {
   Charges?: GTZShipV2Charge[]
 }
 
+/** V2 prohibited commodity info */
 export interface GTZShipV2ProhibitedCommodity {
   Summary?: string
   Description?: string
 }
 
+/** Single carrier rate from the V2 response array */
 export interface GTZShipV2RateDetail {
   CustomerId?: string
   CustomerName?: string
@@ -191,8 +209,10 @@ export interface GTZShipV2RateDetail {
   SpotQuoteCreationTime?: string
 }
 
+/** V2 API returns a flat array of rate details */
 export type GTZShipV2RateResponse = GTZShipV2RateDetail[]
 
+/** Normalized V2 carrier rate for frontend display */
 export interface AllCarrierRate {
   quoteId: string
   carrierName: string
@@ -215,12 +235,17 @@ export interface AllCarrierRate {
   usedLoadLiability?: string
 }
 
+/** All-carrier rate API response from our backend */
 export interface AllCarrierRateApiResponse {
   success: boolean
   data: AllCarrierRate[]
   message?: string
   error?: string
 }
+
+// ============================================================
+// Enums & Constants
+// ============================================================
 
 export enum GTZShipWeightType {
   Kilograms = 0,
@@ -248,6 +273,7 @@ export enum GTZShipPackageType {
   Tote = 17,
 }
 
+/** Map of package type enum values to display labels */
 export const PACKAGE_TYPE_LABELS: Record<number, string> = {
   0: "Std Pallets",
   1: "Pallets - Non Std",
@@ -269,6 +295,7 @@ export const PACKAGE_TYPE_LABELS: Record<number, string> = {
   17: "Tote",
 }
 
+/** Common accessorial codes with labels */
 export const ACCESSORIAL_OPTIONS = [
   { value: 11, label: "Lift Gate Pickup" },
   { value: 12, label: "Lift Gate Delivery" },
@@ -285,6 +312,7 @@ export const ACCESSORIAL_OPTIONS = [
   { value: 104, label: "Notification Delivery" },
 ] as const
 
+/** Extended accessorial options (non-commercial locations, etc.) */
 export const EXTENDED_ACCESSORIAL_OPTIONS = [
   { value: 39, label: "Non Commercial Delivery - Airport" },
   { value: 41, label: "Non Commercial Delivery - Construction/Utility Site" },
@@ -326,11 +354,17 @@ export const EXTENDED_ACCESSORIAL_OPTIONS = [
   { value: 139, label: "Non Commercial Delivery - Limited Access" },
 ] as const
 
+/** Valid freight classes for LTL shipping */
 export const FREIGHT_CLASSES = [
   50, 55, 60, 65, 70, 77.5, 85, 92.5,
   100, 110, 125, 150, 175, 200, 250, 300, 400, 500,
 ] as const
 
+// ============================================================
+// Frontend / Normalized Types
+// ============================================================
+
+/** Normalized rate result for frontend display */
 export interface QuoteRateResult {
   quoteId: string
   rate: string
@@ -356,6 +390,7 @@ export interface QuoteRateResult {
   usedLoadLiability?: string
 }
 
+/** Full quote rate API response from our backend */
 export interface QuoteRateApiResponse {
   success: boolean
   data: {
@@ -366,6 +401,7 @@ export interface QuoteRateApiResponse {
   error?: string
 }
 
+/** Quote form request shape sent to our API route */
 export interface QuoteRateRequestPayload {
   pickupDate: string
   stackable: boolean
