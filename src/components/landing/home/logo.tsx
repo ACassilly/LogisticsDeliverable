@@ -8,7 +8,7 @@ export function Logo({ className = "" }: { className?: string }) {
         style={{ width: "300px", height: "40px" }}
       >
         <Image
-          src="/images/logo/logo.png"
+          src="/images/logo/logo.svg"
           alt="Portlandia Logistics"
           width={200}
           height={20}
