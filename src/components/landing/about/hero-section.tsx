@@ -4,7 +4,7 @@ export function HeroSection() {
   return (
     <section className="relative h-[400px] w-full md:h-[500px] lg:h-[600px]">
       <Image
-        src="/images/about/hero.png"
+        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=600&fit=crop"
         alt="Modern office buildings"
         fill
         className="object-cover"

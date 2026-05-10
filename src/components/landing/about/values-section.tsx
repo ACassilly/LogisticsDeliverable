@@ -18,22 +18,22 @@ export function Values() {
     {
       title: "Execution First",
       description: "We don't just talk logistics  we execute it. Our track record proves our ability to turn strategy to track delivery.",
-      image: "/images/about/value1.png",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
     },
     {
       title: "Partnership",
       description: "We work hand-in-hand with clients, carriers, and drivers to build trust and create wins for everyone.",
-      image: "/images/about/value2.png",
+      image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop",
     },
     {
       title: "Quality",
       description: "Every shipment is handled with the highest standard. We prioritize attention to every detail.",
-      image: "/images/about/value3.png",
+      image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&h=300&fit=crop",
     },
     {
       title: "Innovation",
       description: "Leveraging technology to provide better insights, faster service, and smarter logistics.",
-      image: "/images/about/value4.png",
+      image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop",
     },
   ]
 

@@ -8,7 +8,7 @@ export function WhoWeAre() {
           {/* Image */}
           <div className="relative h-[300px] w-full overflow-hidden rounded-lg md:h-[400px]">
             <Image
-              src="/images/about/who-we-are.png"
+              src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&h=600&fit=crop"
               alt="Logistics technology visualization"
               fill
               className="object-cover"

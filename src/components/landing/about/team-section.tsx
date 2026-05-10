@@ -18,17 +18,17 @@ export function Team() {
     {
       title: "Operations Team",
       description: "15+ years combined experience in freight brokerage, carrier relations, and logistics operations.",
-      image: "/images/about/operations-team.png",
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop",
     },
     {
       title: "Customer Success",
       description: "Dedicated account managers ensuring on-time delivery and proactive communication with clients.",
-      image: "/images/about/customer-succes.png",
+      image: "https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=400&h=300&fit=crop",
     },
     {
       title: "Technology",
       description: "Building modern technology for real-time tracking, instant quotes, and seamless operations.",
-      image: "/images/about/technology.png",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop",
     },
   ]
 
