@@ -1,10 +1,15 @@
 import { notFound } from 'next/navigation';
 import { getServiceData } from '@/constants/services';
+import { SERVICE_SLUGS } from '@/constants/services';
 import { ServiceHero } from '@/components/landing/services/service-hero';
 import { ServiceWhyChoose } from '@/components/landing/services/service-why-choose';
 import { ServiceWhatIs } from '@/components/landing/services/service-what-is';
 import { ServiceBook } from '@/components/landing/services/service-book';
 import { ServiceBuiltFor } from '@/components/landing/services/service-built-for';
+
+export function generateStaticParams() {
+  return SERVICE_SLUGS.map((service) => ({ service }));
+}
 
 interface ServicePageParams {
   service: string;
