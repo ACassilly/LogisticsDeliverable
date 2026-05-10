@@ -8,9 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com', port: '', pathname: '/**' },
     ],
   },
-  experimental: {
-    reactCompiler: true,
-  },
+  reactCompiler: true,
 };
 
 export default nextConfig;
