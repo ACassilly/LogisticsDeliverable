@@ -15,6 +15,7 @@ interface AuthUser {
   name: string;
   role: string;
   lastLogin?: Date | string;
+    companyName?: string;
 }
 
 /**
