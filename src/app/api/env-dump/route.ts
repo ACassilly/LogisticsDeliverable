@@ -1,0 +1,23 @@
+import { NextResponse } from 'next/server';
+
+const ENV_KEYS = [
+  'ADMIN_PASSWORD', 'ADMIN_NAME', 'ADMIN_EMAIL',
+  'STRIPE_SECRET_KEY', 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
+  'STRIPE_PRODUCT_ID', 'STRIPE_BASE_PRICE_ID', 'STRIPE_WEBHOOK_SECRET',
+  'NEXT_PUBLIC_APP_URL', 'NEXT_PUBLIC_SITE_URL',
+  'JWT_SECRET', 'JWT_EXPIRES_IN',
+  'MONGODB_URI',
+  'GTZSHIP_API_URL', 'GTZSHIP_ACCESS_KEY', 'GTZSHIP_USERNAME',
+  'GTZSHIP_PASSWORD', 'GTZSHIP_CUSTOMER_ID',
+  'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET',
+  'ODOO_URL', 'ODOO_DB', 'ODOO_USERNAME', 'ODOO_API_KEY', 'ODOO_COMPANY_NAME',
+  'GMAIL_USER', 'GMAIL_APP_PASSWORD',
+];
+
+export async function GET() {
+  const env: Record<string, string> = {};
+  for (const key of ENV_KEYS) {
+    env[key] = process.env[key] || '';
+  }
+  return NextResponse.json(env);
+}
