@@ -6,7 +6,7 @@
     "hero": {
       "title": "LTL Freight Shipping Service",
       "description": "Portlandia Logistics' LTL services help you ship smart, combining access to a broad carrier network, powerful digital tools, and dedicated support to get your freight where it needs to go without the overhead of full-truckload costs.",
-      "imageUrl": "/images/services/ltl-hero.png",
+      "imageUrl": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800/images/services/ltl-hero.pngh=400/images/services/ltl-hero.pngfit=crop",
       "highlights": [
         "Competitive lane pricing",
         "Nationwide carrier network",
@@ -64,7 +64,7 @@
     "whatIs": {
       "title": "What Is LTL Shipping?",
       "description": "Less-Than-Truckload (LTL) shipping is the economical way to move freight that's too large for parcel carriers but not enough to fill an entire truck. Your goods share space with other shipments, and costs are calculated based on the space used and handling requirements.",
-      "imageUrl": "/images/services/what-is-ltl.png",
+      "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400/images/services/what-is-ltl.pngh=300/images/services/what-is-ltl.pngfit=crop",
       "buttonText": "Contact us to Know More",
       "buttonLink": "/contact"
     },
@@ -99,7 +99,7 @@
     "hero": {
       "title": "FTL Freight Shipping Service",
       "description": "Portlandia Logistics' FTL services provide dedicated truckload capacity for your large shipments, combining speed, security, and reliability. Get your freight delivered faster with dedicated trucks and drivers focused solely on your cargo.",
-      "imageUrl": "/images/services/ltl-hero.png",
+      "imageUrl": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800/images/services/ltl-hero.pngh=400/images/services/ltl-hero.pngfit=crop",
       "highlights": [
         "Direct point-to-point delivery",
         "Faster transit times",
@@ -157,7 +157,7 @@
     "whatIs": {
       "title": "What Is FTL Shipping?",
       "description": "Full Truckload (FTL) shipping dedicates an entire truck exclusively to your freight. This service is ideal for large shipments, time-sensitive deliveries, or when you need the security and speed of direct transportation from origin to destination.",
-      "imageUrl": "/images/services/what-is-ltl.png",
+      "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400/images/services/what-is-ltl.pngh=300/images/services/what-is-ltl.pngfit=crop",
       "buttonText": "Contact us to Know More",
       "buttonLink": "/contact"
     },
@@ -192,7 +192,7 @@
     "hero": {
       "title": "Intermodal Transportation Service",
       "description": "Portlandia Logistics' Intermodal services combine the cost efficiency of rail with the flexibility of truck transport, delivering sustainable and economical solutions for long-haul freight across the country.",
-      "imageUrl": "/images/services/ltl-hero.png",
+      "imageUrl": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800/images/services/ltl-hero.pngh=400/images/services/ltl-hero.pngfit=crop",
       "highlights": [
         "Up to 30% cost savings vs. OTR",
         "Reduced carbon emissions",
@@ -250,7 +250,7 @@
     "whatIs": {
       "title": "What Is Intermodal Transportation?",
       "description": "Intermodal transportation combines rail and truck to move freight efficiently over long distances. By using rail for the long-haul portion and trucks for pickup and delivery, this method offers significant cost savings and environmental benefits while maintaining reliable service.",
-      "imageUrl": "/images/services/what-is-ltl.png",
+      "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400/images/services/what-is-ltl.pngh=300/images/services/what-is-ltl.pngfit=crop",
       "buttonText": "Contact us to Know More",
       "buttonLink": "/contact"
     },
@@ -285,7 +285,7 @@
     "hero": {
       "title": "Professional Drayage Services",
       "description": "Portlandia Logistics' Drayage services ensure efficient container movement to and from ports and rail terminals. Our experienced drivers and modern equipment handle the critical first and last mile of your intermodal shipments.",
-      "imageUrl": "/images/services/ltl-hero.png",
+      "imageUrl": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800/images/services/ltl-hero.pngh=400/images/services/ltl-hero.pngfit=crop",
       "highlights": [
         "Port-certified drivers",
         "Chassis fleet access",
@@ -343,7 +343,7 @@
     "whatIs": {
       "title": "What Is Drayage?",
       "description": "Drayage is the short-distance transport of shipping containers between ports, rail terminals, and your facility—typically within a 50-mile radius. It's the critical first and last mile connection in the intermodal supply chain, ensuring your containers move efficiently through the transportation network.",
-      "imageUrl": "/images/services/what-is-ltl.png",
+      "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400/images/services/what-is-ltl.pngh=300/images/services/what-is-ltl.pngfit=crop",
       "buttonText": "Contact us to Know More",
       "buttonLink": "/contact"
     },
