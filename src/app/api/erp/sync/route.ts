@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tenantGuard, getOdooCompanyFilter } from '@/middleware/tenant-guard';
+import { authenticate, searchRead } from '@/lib/odoo-client';
 
 export async function POST(req: NextRequest) {
   // Apply tenant guard middleware
@@ -8,30 +9,23 @@ export async function POST(req: NextRequest) {
     return guardResponse;
   }
 
-  // Read environment variables
-  const odooUrl = process.env.ODOO_URL;
-  const odooDb = process.env.ODOO_DB;
-  const odooUsername = process.env.ODOO_USERNAME;
-  const odooApiKey = process.env.ODOO_API_KEY;
+  try {
+    // Authenticate with Odoo
+    const uid = await authenticate();
 
-  // Check if Odoo is configured
-  if (!odooUrl || !odooDb || !odooUsername || !odooApiKey) {
+    // Get company filter and extract company ID
+    const companyFilter = getOdooCompanyFilter();
+    const companyId = companyFilter[0][2][0];
+
+    // Search and read res.partner records
+    const partners = await searchRead('res.partner', [['company_id', '=', companyId]], ['name', 'email', 'phone'], uid);
+
+    return NextResponse.json({ partners });
+  } catch (error) {
+    console.error('ERP sync error:', error);
     return NextResponse.json(
-      { error: 'Odoo is not properly configured' },
-      { status: 503 }
+      { error: 'Failed to sync with ERP' },
+      { status: 500 }
     );
   }
-
-  // Apply company filter
-  const companyFilter = getOdooCompanyFilter();
-
-  return NextResponse.json(
-    {
-      success: true,
-      tenant: 'portlandia-logistics',
-      message: 'ERP sync initiated successfully',
-      filter: companyFilter,
-    },
-    { status: 200 }
-  );
 }

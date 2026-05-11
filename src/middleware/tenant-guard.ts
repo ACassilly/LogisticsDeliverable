@@ -21,8 +21,9 @@ export function tenantGuard(req: NextRequest): NextResponse | null {
 
 /**
  * Get Odoo company filter for the allowed tenant.
- * Returns a filter array for restricting queries to company_id 1.
+ * Returns a filter array for restricting queries to the configured Odoo company.
  */
 export function getOdooCompanyFilter() {
-  return [['company_id', 'in', [1]]];
+  const companyId = parseInt(process.env.ODOO_COMPANY_ID || '3', 10);
+  return [['company_id', 'in', [companyId]]];
 }
