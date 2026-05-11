@@ -11,12 +11,9 @@ export function generateStaticParams() {
   return SERVICE_SLUGS.map((service) => ({ service }));
 }
 
-interface ServicePageParams {
-  service: string;
-}
-
-export default function ServiceDetailPage({ params }: { params: ServicePageParams }) {
-  const serviceData = getServiceData(params.service);
+export default async function ServiceDetailPage({ params }: { params: Promise<{ service: string }> }) {
+  const { service } = await params;
+  const serviceData = getServiceData(service);
 
   if (!serviceData) {
     notFound();
