@@ -269,7 +269,7 @@ export function Footer() {
           <div className="text-center md:text-left w-full md:w-auto">
             <div className="mb-3 flex justify-center md:justify-start">
               <Image 
-                src="/images/logo/logo-white.png" 
+                src="/images/logo/logo.svg" 
                 alt="Portlandia Logistics" 
                 width={200} 
                 height={32}
