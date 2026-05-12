@@ -107,3 +107,12 @@ Use it to sign in at <https://id.portlandialogistics.com/web/login>.
 ### Odoo 19 caveats discovered while wiring this
 - `res.users.groups_id` is gone — use `group_ids`.
 - `res.groups.category_id` is gone — module categories no longer couple to groups. The `pl_portal_*` groups are named-only.
+
+## Open image/audit follow-ups (queued atomic tickets, 2026-05-12)
+
+From `audit/asset-audit-20260512.log`:
+
+1. **Service tile placeholders on disk (286-byte JPEGs).** Replace `public/images/services/built-for-ltl.png` (68B), `customer-support.jpg`, `intermodal.jpg`, `specialized.jpg` with real imagery. `ltl-hero.png`, `what-is-ltl.png`, `ltl.jpg` are real and serve correctly.
+2. **`stay-updated.png` / `stay-updated-mobile.png` are 1x1 placeholders.** Replace with real CTA imagery.
+3. **`_next/image?url=...&w=3840` returns HTTP 400 in prod for some service assets.** Investigate Next 16 image optimizer `deviceSizes` cap and `images.formats` in `next.config.ts`; consider adding `images.localPatterns` or switching the heavy `ltl.jpg` (1.8 MB) to Cloudinary.
+4. **Optimize `ltl.jpg` (1.8 MB).** Either pre-compress in `public/` or move to Cloudinary `f_auto,q_auto`.

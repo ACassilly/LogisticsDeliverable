@@ -31,7 +31,7 @@ See `.env.local.example` for all required variables.
 
 | Role | Portal URL |
 |------|------------|
-| ADMIN | `/admin/portal` |
+| ADMIN | `/portal/admin` |
 | AGENT | `/portal/agent` |
 | DISPATCHER | `/portal/dispatcher` |
 | SHIPPER | `/portal/shipper` |
