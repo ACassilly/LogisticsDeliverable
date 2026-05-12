@@ -8,8 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useCompanyContact } from "@/hooks/use-company-contact";
 
 export function Footer() {
+  const { contact, loading } = useCompanyContact(3);
+
   return (
     <footer className="bg-[var(--dark-gray)] text-[var(--text-footer)] rounded-t-[20px] sm:rounded-t-[30px]">
       <div className="max-w-full mx-auto px-4 sm:px-14 lg:px-20">
@@ -116,22 +119,24 @@ export function Footer() {
                 <li className="flex items-start gap-3">
                   <Image src="/images/icons/phone.png" alt="Phone" width={16} height={16} />
                   <div>
-                    <p className="text-sm text-[var(--text-footer)]">(502) 385-3399</p>
+                    <p className="text-sm text-[var(--text-footer)]">{contact.phone}</p>
                     <p className="text-xs text-[var(--text-footer-muted)] mt-0.5">24/7 Support</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Image src="/images/icons/email.png" alt="Email" width={16} height={16} />
-                  <p className="text-sm text-[var(--text-footer)]">connect@portlandialogistics.com</p>
+                  <p className="text-sm text-[var(--text-footer)]">{contact.email}</p>
                 </li>
                 <li className="flex items-start gap-3">
                   <Image src="/images/icons/location.png" alt="Location" width={16} height={16} />
-                  <p className="text-sm text-[var(--text-footer)]">Louisville, KY 40203</p>
+                  <p className="text-sm text-[var(--text-footer)]">
+                    {contact.city}, {contact.state} {contact.zip}
+                  </p>
                 </li>
                 <li className="flex items-start gap-3">
                   <Image src="/images/icons/clock.png" alt="Time" width={16} height={16} />
                   <div>
-                    <p className="text-sm text-[var(--text-footer)]">Mon-Fri: 8AM-6PM EST</p>
+                    <p className="text-sm text-[var(--text-footer)]">{contact.business_hours}</p>
                     <p className="text-sm text-[var(--text-footer)]">24/7 Emergency Support</p>
                   </div>
                 </li>
@@ -238,22 +243,24 @@ export function Footer() {
                     <li className="flex items-start gap-3">
                       <Image src="/images/icons/phone.png" alt="Phone" width={16} height={16} />
                       <div>
-                        <p className="text-sm text-[var(--text-footer)]">(502) 385-3399</p>
+                        <p className="text-sm text-[var(--text-footer)]">{contact.phone}</p>
                         <p className="text-xs text-[var(--text-footer-muted)] mt-0.5">24/7 Support</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <Image src="/images/icons/email.png" alt="Email" width={16} height={16} />
-                      <p className="text-sm text-[var(--text-footer)]">connect@portlandialogistics.com</p>
+                      <p className="text-sm text-[var(--text-footer)]">{contact.email}</p>
                     </li>
                     <li className="flex items-start gap-3">
                       <Image src="/images/icons/location.png" alt="Location" width={16} height={16} />
-                      <p className="text-sm text-[var(--text-footer)]">Louisville, KY 40203</p>
+                      <p className="text-sm text-[var(--text-footer)]">
+                        {contact.city}, {contact.state} {contact.zip}
+                      </p>
                     </li>
                     <li className="flex items-start gap-3">
                       <Image src="/images/icons/clock.png" alt="Time" width={16} height={16} />
                       <div>
-                        <p className="text-sm text-[var(--text-footer)]">Mon-Fri: 8AM-6PM EST</p>
+                        <p className="text-sm text-[var(--text-footer)]">{contact.business_hours}</p>
                         <p className="text-sm text-[var(--text-footer)]">24/7 Emergency Support</p>
                       </div>
                     </li>
