@@ -70,14 +70,14 @@ export function BlogPostsGrid() {
   });
 
   // Transform API data to match UI format
-  const blogPosts = data?.data?.map((blog: Blog, index) => ({
+  const apiBlogs = data?.data?.map((blog: Blog, index) => ({
     id: blog.slug,
     title: blog.title,
     description: blog.excerpt || stripHtml(blog.content).substring(0, 150) + '...',
     image: resolveBlogImageSrc(blog.imageUrl, index),
     category: getCategoryName(blog.category),
     date: formatDate(blog.publishedAt || blog.createdAt)
-  })) || (!searchQuery && (!selectedCategory || selectedCategory === 'all') ? FALLBACK_BLOGS : []);
+  })) || []; const blogPosts = (apiBlogs && apiBlogs.length > 0) ? apiBlogs : ((!searchQuery && (!selectedCategory || selectedCategory === 'all')) ? FALLBACK_BLOGS : []);
 
   // Pagination info
   const totalPages = data?.pagination?.pages || 1;
