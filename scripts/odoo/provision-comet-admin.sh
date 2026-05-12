@@ -15,7 +15,7 @@ fi
 PW=$(cat "$PWFILE")
 export PW
 
-sudo -u odoo /opt/odoo/venv/bin/odoo shell -c /etc/odoo/odoo.conf -d pes_crm --no-http <<'PYEOF'
+sudo -u odoo PW="$PW" /opt/odoo/venv/bin/odoo shell -c /etc/odoo/odoo.conf -d pes_crm --no-http <<'PYEOF'
 import os
 LOGIN='comet-admin@portlandialogistics.com'
 PW=os.environ['PW']
