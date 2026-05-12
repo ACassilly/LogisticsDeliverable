@@ -6,7 +6,7 @@ const industriesHero = {
   title: 'Industries We Serve',
   description:
     'Portlandia Logistics supports retail, manufacturing, healthcare, construction, and more with tailored freight solutions that keep your supply chain moving.',
-  imageUrl: '/images/services/built-for-ltl.png',
+  imageUrl: '/images/services/what-is-ltl.png',
   highlights: [
     'Retail & eCommerce logistics',
     'Manufacturing & industrial freight',
@@ -20,7 +20,7 @@ const industriesHero = {
 
 const industriesBuiltFor = {
   title: 'Built for Every Industry',
-  imageUrl: '/images/services/built-for-ltl.png',
+  imageUrl: '/images/services/what-is-ltl.png',
   items: [
     {
       title: 'Retail & eCommerce',

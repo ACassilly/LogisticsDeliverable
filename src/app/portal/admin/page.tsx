@@ -348,7 +348,7 @@ const BlogPortal = () => {
             <div key={blog._id} className="bg-white rounded-[2rem] border border-gray-100 group shadow-sm hover:shadow-xl transition-all duration-500">
               <div className="relative h-64 overflow-hidden rounded-t-[2rem]">
                 <Image 
-                  src={blog.imageUrl || "/images/services/customer-support.jpg"} 
+                  src={blog.imageUrl || "/images/services/ltl-hero.png"} 
                   alt={blog.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 

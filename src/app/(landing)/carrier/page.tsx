@@ -20,7 +20,7 @@ const carrierHero = {
 
 const carrierBuiltFor = {
   title: 'Built for Carrier Success',
-  imageUrl: '/images/services/built-for-ltl.png',
+  imageUrl: '/images/services/what-is-ltl.png',
   items: [
     {
       title: 'Transparent Load Flow',

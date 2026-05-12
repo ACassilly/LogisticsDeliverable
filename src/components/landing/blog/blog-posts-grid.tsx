@@ -68,7 +68,7 @@ export function BlogPostsGrid() {
     id: blog.slug,
     title: blog.title,
     description: blog.excerpt || stripHtml(blog.content).substring(0, 150) + '...',
-    image: blog.imageUrl || "/images/services/customer-support.jpg",
+    image: blog.imageUrl || "/images/services/ltl-hero.png",
     category: getCategoryName(blog.category),
     date: formatDate(blog.publishedAt || blog.createdAt)
   })) || [];

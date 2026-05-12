@@ -36,7 +36,7 @@ const services = {
       "Ideal for 750+ mile shipments"
     ],
     cta: "Learn More",
-    image: "/images/services/intermodal.jpg"
+    image: "/images/services/ltl-hero.png"
   },
   ltl: {
     id: "ltl",
@@ -49,7 +49,7 @@ const services = {
       "Real-time tracking and POD"
     ],
     cta: "Get LTL Quote",
-    image: "/images/services/built-for-ltl.png"
+    image: "/images/services/what-is-ltl.png"
   },
   specialized: {
     id: "specialized",
@@ -62,7 +62,7 @@ const services = {
       "White glove delivery services"
     ],
     cta: "Discuss Requirements",
-    image: "/images/services/specialized.jpg"
+    image: "/images/services/ltl.jpg"
   },
   support: {
     id: "support",
@@ -75,7 +75,7 @@ const services = {
       "Proactive issue resolution"
     ],
     cta: "Contact Support",
-    image: "/images/services/customer-support.jpg"
+    image: "/images/services/ltl-hero.png"
   }
 };
 
