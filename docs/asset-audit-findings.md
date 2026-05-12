@@ -42,3 +42,9 @@ _Run: 2026-05-12T14:00 EDT via `scripts/qa/asset-audit.sh` plus visual review._
   - `website.contactus` → view 6995 (page email/phone).
 - Company record (id 3) and partner updated to real Portlandia Logistics phone/email/website.
 - **Outstanding on Odoo:** header still renders the "Your Logo" placeholder PNG and a top-bar `+1 555-555-5556` from a different snippet than view 1603. Need to (a) re-attempt `website.logo` write via `ir.attachment`/`image_1920` so the bytes actually replace the served SVG, and (b) locate the qweb fragment rendering the visible header phone (likely a `s_text_block` saved on a website-scoped page rather than view 1603).
+
+## Update (post user note: "muzzammil was copied in as a zip")
+- Filesystem-wide search of the current Codespace for `*muzz*`, `*muzammil*`, `*.zip`, `*.tar*`, `*.tgz` outside Go stdlib testdata: **no muzzammil zip is present on this Codespace.** It was almost certainly on the previous (stopped) Codespace.
+- However, the prior muzzammil sync **was committed** to the canonical repo: commit **`8da36e2 feat(assets): sync missing public/ assets from muzzammil source`**. Git history confirms the absorbed file set under `public/images/{icons,logo,quote,services}/...` and `public/site.webmanifest`.
+- Therefore the muzzammil-shipped files we observe today (`icons/{clock,email,phone,location}.png` at 172 B, `blog/post-{1..4}.jpg` at 286 B, `stay-updated.png` 1×1, `logo/logo.svg` 229 B) **are the muzzammil-original stubs**, not regressions on our side. They were placeholders in the muzzammil source.
+- Action: source real raster images for these slots (icons via lucide/heroicons set, blog tiles via Unsplash or in-house photography, stay-updated CTA via Unsplash). No reference repo to copy from exists.
