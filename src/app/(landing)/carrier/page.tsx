@@ -6,7 +6,7 @@ const carrierHero = {
   title: 'Carrier Partnership Program',
   description:
     'Join Portlandia Logistics and access high-quality freight lanes, reliable pay terms, and a streamlined partner experience built for professional carriers.',
-  imageUrl: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&h=400&fit=crop',
+  imageUrl: '/images/services/ltl-hero.png',
   highlights: [
     'Consistent freight lanes nationwide',
     'Fast pay and clear terms',
