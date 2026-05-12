@@ -23,7 +23,7 @@ export function Values() {
     {
       title: "Partnership",
       description: "We work hand-in-hand with clients, carriers, and drivers to build trust and create wins for everyone.",
-      image: "/images/trust-section/trust-sec-image1.jpg",
+      image: "/images/services/ltl-hero.png",
     },
     {
       title: "Quality",

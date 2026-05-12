@@ -67,7 +67,7 @@ export function TrustedLogisticsSolutions() {
             {/* Top Left - Large Image */}
             <div className="col-span-1 row-span-2 relative rounded-[20px] overflow-hidden h-full min-h-[400px] lg:min-h-[500px] z-20">
               <Image
-                src="/images/trust-section/trust-sec-image1.jpg"
+                src="/images/services/ltl-hero.png"
                 alt="Logistics Truck on Highway"
                 fill
                 className="object-cover"
@@ -78,7 +78,7 @@ export function TrustedLogisticsSolutions() {
             {/* Top Right - Container Image */}
             <div className="col-span-1 relative rounded-4xl overflow-hidden h-69.5 lg:h-69.5">
               <Image
-                src="/images/trust-section/trust-sec-image2.jpg"
+                src="/images/services/ltl-hero.png"
                 alt="Shipping Containers"
                 fill
                 className="object-cover"
