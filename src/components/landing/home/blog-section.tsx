@@ -43,7 +43,7 @@ const FALLBACK_BLOGS = [
     id: 1,
     title: "How Real-Time Visibility Improves Supply Chain Efficiency",
     excerpt: "Learn how better tracking and communication reduce delays and improve planning.",
-    image: "/images/blog/post-1.jpg",
+    image: "/images/Blog/blog-frame1.png",
     category: "Industry Insights",
     date: "Feb 2, 2026"
   },
@@ -51,7 +51,7 @@ const FALLBACK_BLOGS = [
     id: 2,
     title: "5 Ways to Reduce Freight Costs Without Sacrificing Service",
     excerpt: "Practical strategies to optimize your logistics budget while maintaining quality.",
-    image: "/images/blog/post-2.jpg",
+    image: "/images/Blog/blog-frame2.png",
     category: "Cost Optimization",
     date: "Jan 28, 2026"
   },
@@ -59,7 +59,7 @@ const FALLBACK_BLOGS = [
     id: 3,
     title: "The Future of LTL Shipping: Trends to Watch in 2026",
     excerpt: "Emerging technologies and market shifts shaping the less-than-truckload industry.",
-    image: "/images/blog/post-3.jpg",
+    image: "/images/Blog/blog-frame3.png",
     category: "Market Trends",
     date: "Jan 25, 2026"
   },
@@ -67,7 +67,7 @@ const FALLBACK_BLOGS = [
     id: 4,
     title: "How Real-Time Visibility Improves Supply Chain Efficiency",
     excerpt: "Learn how better tracking and communication reduce delays and improve planning.",
-    image: "/images/blog/post-4.jpg",
+    image: "/images/Blog/blog-frame1.png",
     category: "Industry Insights",
     date: "Feb 2, 2026"
   },
@@ -75,7 +75,7 @@ const FALLBACK_BLOGS = [
     id: 5,
     title: "5 Ways to Reduce Freight Costs Without Sacrificing Service",
     excerpt: "Practical strategies to optimize your logistics budget while maintaining quality.",
-    image: "/images/blog/post-1.jpg",
+    image: "/images/Blog/blog-frame1.png",
     category: "Cost Optimization",
     date: "Jan 28, 2026"
   },
@@ -83,7 +83,7 @@ const FALLBACK_BLOGS = [
     id: 6,
     title: "The Future of LTL Shipping: Trends to Watch in 2026",
     excerpt: "Emerging technologies and market shifts shaping the less-than-truckload industry.",
-    image: "/images/blog/post-2.jpg",
+    image: "/images/Blog/blog-frame2.png",
     category: "Market Trends",
     date: "Jan 25, 2026"
   }
