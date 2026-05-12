@@ -1,0 +1,13 @@
+{
+  "portal_base": "https://portlandialogistics.com",
+  "login_path": "/login",
+  "roles": [
+    {"key": "ADMIN",      "path": "/portal/admin",      "odoo_group": "pl_portal_admin"},
+    {"key": "AGENT",      "path": "/portal/agent",      "odoo_group": "pl_portal_agent"},
+    {"key": "DISPATCHER", "path": "/portal/dispatcher", "odoo_group": "pl_portal_dispatcher"},
+    {"key": "SHIPPER",    "path": "/portal/shipper",    "odoo_group": "pl_portal_shipper"},
+    {"key": "CARRIER",    "path": "/portal/carrier",    "odoo_group": "pl_portal_carrier"},
+    {"key": "LEADERSHIP", "path": "/portal/leadership", "odoo_group": "pl_portal_leadership"}
+  ],
+  "public_paths": ["/", "/about", "/services", "/services/intermodal", "/contact", "/login"]
+}

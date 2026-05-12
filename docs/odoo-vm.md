@@ -89,3 +89,21 @@ Use it to sign in at <https://id.portlandialogistics.com/web/login>.
   source CIDR.
 - Lost SSH key: regenerate inside the Codespace, then push the new pubkey to
   the VM via `az-run.sh`.
+
+## Per-user-type QA harness & portal groups (added 2026-05-12)
+
+- `scripts/qa/roles.json` — declarative map of the 6 RBAC roles (ADMIN, AGENT, DISPATCHER, SHIPPER, CARRIER, LEADERSHIP), their Next.js paths under `/portal/<role>`, and matching Odoo group names `pl_portal_<role>`.
+- `scripts/qa/probe-roles.sh` — asserts (a) every `/portal/<role>` redirects unauthenticated requests to `/login?redirect=...`, (b) every public path returns 200 with body >1024 bytes.
+- `scripts/qa/asset-audit.sh` — crawls public pages and audits every `<img>`/`og:image` URL for placeholder bytes or non-image content-type.
+- `scripts/odoo/provision-portal-groups.sh` — idempotently creates the 6 `pl_portal_*` groups in `pes_crm` (no users created).
+
+### How to actually assign humans to portal groups (you, not the assistant)
+1. Reveal the comet-admin password (on the VM only):  
+   `scripts/odoo/ssh.sh sudo cat /root/.comet-admin.pwd`
+2. Sign in at `https://id.portlandialogistics.com/web/login` as `comet-admin@portlandialogistics.com`.
+3. Settings → Users & Companies → Users → pick the user → check the relevant `PL Portal *` group(s) under Other (Odoo 19: `group_ids`).
+4. Save.
+
+### Odoo 19 caveats discovered while wiring this
+- `res.users.groups_id` is gone — use `group_ids`.
+- `res.groups.category_id` is gone — module categories no longer couple to groups. The `pl_portal_*` groups are named-only.

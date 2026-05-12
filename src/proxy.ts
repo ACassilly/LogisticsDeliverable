@@ -16,6 +16,7 @@ import { UserRole, ROLE_PORTAL_MAP } from '@/types';
  */
 const ROLE_PROTECTED_ROUTES: Record<string, UserRole[]> = {
   '/admin': [UserRole.ADMIN],
+  '/portal/admin': [UserRole.ADMIN],
   '/portal/agent': [UserRole.AGENT, UserRole.ADMIN],
   '/portal/dispatcher': [UserRole.DISPATCHER, UserRole.ADMIN],
   '/portal/shipper': [UserRole.SHIPPER, UserRole.ADMIN],
