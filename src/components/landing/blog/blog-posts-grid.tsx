@@ -37,6 +37,11 @@ function getCategoryName(category: string): string {
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
 }
+const FALLBACK_BLOGS = [
+  { id: 'real-time-visibility', title: 'How Real-Time Visibility Improves Supply Chain Efficiency', description: 'Learn how better tracking and communication reduce delays and improve planning.', image: '/images/Blog/blog-frame1.png', category: 'Industry Insights', date: 'Feb 2, 2026' },
+  { id: 'reduce-freight-costs', title: '5 Ways to Reduce Freight Costs Without Sacrificing Service', description: 'Practical strategies to optimize your logistics budget while maintaining quality.', image: '/images/Blog/blog-frame2.png', category: 'Cost Optimization', date: 'Jan 28, 2026' },
+  { id: 'future-of-ltl', title: 'The Future of LTL Shipping: Trends to Watch in 2026', description: 'Emerging technologies and market shifts shaping the less-than-truckload industry.', image: '/images/Blog/blog-frame3.png', category: 'Market Trends', date: 'Jan 25, 2026' }
+  ];
 
 export function BlogPostsGrid() {
   const BLOGS_PER_PAGE = 9;
@@ -72,7 +77,7 @@ export function BlogPostsGrid() {
     image: resolveBlogImageSrc(blog.imageUrl, index),
     category: getCategoryName(blog.category),
     date: formatDate(blog.publishedAt || blog.createdAt)
-  })) || [];
+  })) || (!searchQuery && (!selectedCategory || selectedCategory === 'all') ? FALLBACK_BLOGS : []);
 
   // Pagination info
   const totalPages = data?.pagination?.pages || 1;
