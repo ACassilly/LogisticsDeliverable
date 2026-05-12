@@ -1,36 +1,33 @@
-name: Azure Deploy
+name: Azure VM Deploy
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  ssh-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Deploy to Azure VM via SSH
+        uses: appleboy/ssh-action@v1
         with:
-          node-version: '18.x'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build project
-        run: pnpm build
-        env:
-          NEXT_PUBLIC_APP_URL: https://portlandialogistics.com
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: portlandia-logistics
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            echo "Deploying to Azure VM at 52.188.149.177"
+            cd /opt/LogisticsDeliverable
+            git pull origin main
+            npm install -g pnpm
+            pnpm install --frozen-lockfile
+            NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
+            pm2 restart portlandia-logistics
+            echo "Verifying app status..."
+            curl --fail --silent --show-error http://localhost:3000
