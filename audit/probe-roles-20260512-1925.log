@@ -1,0 +1,16 @@
+### NEGATIVE AUTH PROBE (unauthenticated must redirect to /login) ###
+  ADMIN        /portal/admin          http=307 redirect=https://portlandialogistics.com/login?redirect=%2Fportal%2Fadmin
+  AGENT        /portal/agent          http=307 redirect=https://portlandialogistics.com/login?redirect=%2Fportal%2Fagent
+  DISPATCHER   /portal/dispatcher     http=307 redirect=https://portlandialogistics.com/login?redirect=%2Fportal%2Fdispatcher
+  SHIPPER      /portal/shipper        http=307 redirect=https://portlandialogistics.com/login?redirect=%2Fportal%2Fshipper
+  CARRIER      /portal/carrier        http=307 redirect=https://portlandialogistics.com/login?redirect=%2Fportal%2Fcarrier
+  LEADERSHIP   /portal/leadership     http=307 redirect=https://portlandialogistics.com/login?redirect=%2Fportal%2Fleadership
+### PUBLIC PROBE (200 with body > 1024 bytes) ###
+  /                      http=200 bytes=144102
+  /about                 http=200 bytes=88475
+  /services              http=200 bytes=44945
+  /services/intermodal   http=200 bytes=74121
+  /contact               http=200 bytes=52148
+  /login                 http=200 bytes=14397
+### RESULT ###
+OK

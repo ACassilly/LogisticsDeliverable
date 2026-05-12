@@ -1,50 +1,36 @@
-# Live front-end asset audit (portlandialogistics.com)
+# Asset Audit Findings
 
-_Run: 2026-05-12T14:00 EDT via `scripts/qa/asset-audit.sh` plus visual review._
+_Last updated: 2026-05-12. Source: scripts/qa/asset-audit.sh against https://portlandialogistics.com on commit 800a879+._
 
-## Result
-- Pages crawled: 6
-- Assets checked: 54
-- Failures: 36
+## Summary
+- pages=6 (/, /about, /services, /services/intermodal, /contact, /login), assets=55, raw fails=33
+- After ground-truth disk inspection, **real** broken/placeholder assets = 3 files.
 
-## Failures by class
-1. **Local icon placeholders (172 bytes each)** under `public/images/icons/`:
-   - `clock.png`, `email.png`, `location.png`, `phone.png`
-   - These render as broken / tiny images on `/`, `/services`, `/services/intermodal`.
-2. **Local search icon** `images/icons/search.svg` (242 bytes — minimal SVG, may be intentional).
-3. **Local logo SVG** `images/logo/logo.svg` (229 bytes — placeholder).
-4. **Blog post tile placeholders** `public/images/blog/post-{1..4}.jpg` (286 bytes each) — not referenced by home page (home uses Unsplash URLs), but referenced elsewhere.
-5. **Unsplash optimizer 404** — one Unsplash photo id returns 404 through `_next/image` while sibling ids succeed; appears to be a stale id in a blog data file.
-6. **`images/stay-updated.png` / `images/stay-updated-mobile.png`** — 1×1 placeholders, render as flat grey CTA panel at bottom of home.
+## Real placeholders to replace
+| File | Bytes | Issue |
+|---|---|---|
+| public/images/icons/location.png | 466 | Likely 1×1 placeholder |
+| public/images/icons/phone.png | 442 | Likely 1×1 placeholder |
+| public/images/logo/logo.svg | 229 | Placeholder SVG; canonical logo is logo.png (91 KB) |
 
-## Visual regressions verified on live home page
-- Hero ✅ (green truck fleet stock photo renders clean)
-- Stats + trust icons ✅
-- Services tabs (FTL) ✅
-- Testimonials ✅
-- **Blog cards ❌** — alt-text bleed-through; no image renders. Likely the stale Unsplash id returning 404.
-- FAQ ✅
-- **Stay Updated CTA ❌** — flat dark-grey panel (placeholder).
-- Footer ✅ (real phone, email, address, operating notice)
+## False positives (Next.js optimizer compressed variants)
+The audit harness measures bytes returned by /_next/image, which serves AVIF/WebP variants. Files with real source bytes >10 KB but optimizer responses <500 B include:
+- public/images/services/ltl.jpg (1.8 MB on disk)
+- public/images/services/what-is-ltl.png (433 KB)
+- public/images/services/ltl-hero.png (present)
+- public/images/stay-updated.png (633 KB)
+- public/images/stay-updated-mobile.png (347 KB)
+- public/images/quote/trucks.png (present)
+- public/images/icons/search.svg (267 B but valid small SVG icon)
 
-## Reference-repo comparison status
-- The previously cited reference repo `mk-muzzammil/LogisticsDeliverable` is **not accessible** from the active Codespace identity:
-  - GitHub returns 404 for both `mk-muzzammil/LogisticsDeliverable` and `MK-Muzzammil/LogisticsDeliverable`.
-  - `gh repo list mk-muzzammil --limit 200` shows no logistics-related repository (only Whatsapp-Clone, Personal-Portfolio, E-commerce-Auction, AI-Powered-SAAS-Platform-NextJS, etc.).
-  - The canonical repo `ACassilly/LogisticsDeliverable` is not a fork and has no GitHub-visible parent or public forks.
-- Asset reconciliation will therefore proceed from authoritative free stock (Unsplash) and in-repo assets, not from a reference repo.
+## Stale external Unsplash URLs
+Multiple homepage / blog Unsplash photo IDs (images.unsplash.com/photo-XXXXXX) return small/forbidden responses through the Next.js optimizer. The blog cards have been patched (commit 800a879) with a safe fallback resolver and now render clean placeholder cards instead of broken images / alt-text bleed-through.
 
-## Odoo portal rebrand status (id.portlandialogistics.com)
-- Top nav pruned to {Home, Contact us} (Shop/Events/Forum/Blog/Courses/Appointment/Jobs unlinked).
-- Per-website overrides created scoped to `website_id=8`:
-  - `website.footer_custom` → view 6993 (About copy, contact email/phone).
-  - `website.header_text_element` → view 6994 (header phone).
-  - `website.contactus` → view 6995 (page email/phone).
-- Company record (id 3) and partner updated to real Portlandia Logistics phone/email/website.
-- **Outstanding on Odoo:** header still renders the "Your Logo" placeholder PNG and a top-bar `+1 555-555-5556` from a different snippet than view 1603. Need to (a) re-attempt `website.logo` write via `ir.attachment`/`image_1920` so the bytes actually replace the served SVG, and (b) locate the qweb fragment rendering the visible header phone (likely a `s_text_block` saved on a website-scoped page rather than view 1603).
+## /portal role surfaces
+All five auth-gated portals correctly redirect anonymous traffic with HTTP 307 to /login?redirect=%2Fportal%2F<role>:
+- ADMIN, DISPATCHER, SHIPPER, CARRIER, LEADERSHIP
+Probe log archived at audit/probe-roles-20260512-1925.log.
 
-## Update (post user note: "muzzammil was copied in as a zip")
-- Filesystem-wide search of the current Codespace for `*muzz*`, `*muzammil*`, `*.zip`, `*.tar*`, `*.tgz` outside Go stdlib testdata: **no muzzammil zip is present on this Codespace.** It was almost certainly on the previous (stopped) Codespace.
-- However, the prior muzzammil sync **was committed** to the canonical repo: commit **`8da36e2 feat(assets): sync missing public/ assets from muzzammil source`**. Git history confirms the absorbed file set under `public/images/{icons,logo,quote,services}/...` and `public/site.webmanifest`.
-- Therefore the muzzammil-shipped files we observe today (`icons/{clock,email,phone,location}.png` at 172 B, `blog/post-{1..4}.jpg` at 286 B, `stay-updated.png` 1×1, `logo/logo.svg` 229 B) **are the muzzammil-original stubs**, not regressions on our side. They were placeholders in the muzzammil source.
-- Action: source real raster images for these slots (icons via lucide/heroicons set, blog tiles via Unsplash or in-house photography, stay-updated CTA via Unsplash). No reference repo to copy from exists.
+## Odoo portal branding residuals
+- id.portlandialogistics.com header still shows 'Your Logo' placeholder + '+1 555-555-5556' default phone (footer/title/contact are correctly Portlandia-branded).
+- id.cassilly.capital header still shows 'Your Logo' placeholder (phone, footer, title correctly Cassilly Capital-branded). 'Log in as superuser' link visible — should be disabled in production.

@@ -1,0 +1,62 @@
+### https://portlandialogistics.com/ ###
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fblog%2Fpost-1.jpg&w=3840&q=75 sz=322 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fblog%2Fpost-2.jpg&w=3840&q=75 sz=322 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fblog%2Fpost-3.jpg&w=3840&q=75 sz=322 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fblog%2Fpost-4.jpg&w=3840&q=75 sz=322 ct=image/jpeg
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fclock.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Femail.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Flocation.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fphone.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fsearch.svg&w=32&q=75 SMALL=242
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Flogo%2Flogo.svg&w=640&q=75 SMALL=229
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fquote%2Ftrucks.png&w=3840&q=75 sz=214976 ct=image/png
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fservices%2Fltl-hero.png&w=3840&q=75 sz=78553 ct=image/png
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fservices%2Fltl.jpg&w=3840&q=75 sz=985642 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fservices%2Fwhat-is-ltl.png&w=3840&q=75 sz=109726 ct=image/png
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Fstay-updated-mobile.png&w=828&q=75 SMALL=116
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Fstay-updated.png&w=3840&q=75 SMALL=116
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1438761681033-6461ffad8d80%3Fw%3D100%26h%3D100%26fit%3Dcrop&w=3840&q=75 sz=2013 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1472099645785-5658abf4ff4e%3Fw%3D100%26h%3D100%26fit%3Dcrop&w=3840&q=75 sz=1419 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1494790108377-be9c29b29330%3Fw%3D100%26h%3D100%26fit%3Dcrop&w=3840&q=75 sz=2050 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1507003211169-0a1dd7228f2d%3Fw%3D100%26h%3D100%26fit%3Dcrop&w=3840&q=75 sz=1940 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1601584115197-04ecc0da31d7%3Fw%3D700%26h%3D458%26fit%3Dcrop&w=3840&q=75 sz=36490 ct=image/jpeg
+### https://portlandialogistics.com/about ###
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fclock.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Femail.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Flocation.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fphone.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fsearch.svg&w=32&q=75 SMALL=242
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Flogo%2Flogo.svg&w=640&q=75 SMALL=229
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fservices%2Fltl-hero.png&w=3840&q=75 sz=78553 ct=image/png
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1486406146926-c627a92ad1ab%3Fw%3D1200%26h%3D600%26fit%3Dcrop&w=3840&q=75 sz=100872 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1518770660439-4636190af475%3Fw%3D400%26h%3D300%26fit%3Dcrop&w=3840&q=75 sz=19697 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1522071820081-009f0129c71c%3Fw%3D400%26h%3D300%26fit%3Dcrop&w=3840&q=75 sz=18187 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1556745757-8d76bdb6984b%3Fw%3D400%26h%3D300%26fit%3Dcrop&w=3840&q=75 sz=12269 ct=image/jpeg
+  FAIL https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1558618047-3c8c76ca7d13%3Fw%3D400%26h%3D300%26fit%3Dcrop&w=3840&q=75 HTTP=404 CT= SMALL=57
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1558618666-fcd25c85cd64%3Fw%3D400%26h%3D300%26fit%3Dcrop&w=3840&q=75 sz=12516 ct=image/jpeg
+  ok   https://portlandialogistics.com/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1566576912321-d58ddd7a6088%3Fw%3D400%26h%3D300%26fit%3Dcrop&w=3840&q=75 sz=17287 ct=image/jpeg
+### https://portlandialogistics.com/services ###
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fclock.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Femail.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Flocation.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fphone.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fsearch.svg&w=32&q=75 SMALL=242
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Flogo%2Flogo.svg&w=640&q=75 SMALL=229
+### https://portlandialogistics.com/services/intermodal ###
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fclock.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Femail.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Flocation.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fphone.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fsearch.svg&w=32&q=75 SMALL=242
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Flogo%2Flogo.svg&w=640&q=75 SMALL=229
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fservices%2Fltl-hero.png&w=3840&q=75 sz=78553 ct=image/png
+  ok   https://portlandialogistics.com/_next/image?url=%2Fimages%2Fservices%2Fwhat-is-ltl.png&w=3840&q=75 sz=109726 ct=image/png
+### https://portlandialogistics.com/contact ###
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fclock.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Femail.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Flocation.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fphone.png&w=32&q=75 SMALL=172
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Ficons%2Fsearch.svg&w=32&q=75 SMALL=242
+  FAIL https://portlandialogistics.com/_next/image?url=%2Fimages%2Flogo%2Flogo.svg&w=640&q=75 SMALL=229
+### https://portlandialogistics.com/login ###
+### RESULT pages=6 assets=55 fails=33 ###
