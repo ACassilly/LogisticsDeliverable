@@ -2,32 +2,38 @@ name: Azure VM Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   ssh-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Deploy to Azure VM via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            set -e
-            echo "Deploying to Azure VM at 52.188.149.177"
-            cd /opt/LogisticsDeliverable
-            git pull origin main
-            npm install -g pnpm
-            pnpm install --frozen-lockfile
-            NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
-            pm2 restart portlandia-logistics
-            echo "Verifying app status..."
-            curl --fail --silent --show-error http://localhost:3000
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_KEY_B64: ${{ secrets.SSH_KEY_B64 }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY_B64" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USERNAME@$SSH_HOST" << 'DEPLOY'
+          set -e
+          cd /opt/LogisticsDeliverable
+          git pull origin main
+          export CI=true
+          npm install -g pnpm || true
+          pnpm install --no-frozen-lockfile
+          NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
+          pm2 delete portlandia-logistics 2>/dev/null || true
+          pm2 start node_modules/.bin/next --name portlandia-logistics -- start -p 3000
+          pm2 save
+          sleep 3
+          curl --fail --silent --show-error http://localhost:3000
+          echo "Deploy successful!"
+          DEPLOY
