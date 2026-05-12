@@ -1,51 +1,54 @@
 #!/usr/bin/env bash
-# Rebrand the Portlandia Logistics Portal Odoo website (website_id=8)
-# and its company (company_id=3): logo, phone, email, website, About copy,
-# and prune unused public Odoo modules from the public nav (Shop/Events/
-# Forum/Blog/Courses/Appointment/Jobs).
+# Rebrand the Portlandia Logistics Portal (Odoo website_id=8, company_id=3).
+# Idempotent: pruning unused public modules + per-website footer/contactus/header overrides.
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$DIR/../.." && pwd)"
-LOGO_LOCAL="$REPO/public/images/logo.png"
-test -s "$LOGO_LOCAL"
-# Stage the logo on the VM
-base64 -w0 "$LOGO_LOCAL" > /tmp/pl-logo.b64
-scp -o StrictHostKeyChecking=no -i "$DIR/../../.ssh-codespace/id_ed25519" /tmp/pl-logo.b64 azureuser@40.124.224.123:/tmp/pl-logo.b64 || true
-"$DIR/ssh.sh" 'sudo bash -s' <<'REMOTE'
+LOGO="$REPO/public/images/logo/logo-white.png"
+test -s "$LOGO"
+B64="$(base64 -w0 "$LOGO")"
+cat > /tmp/_rebrand.sh <<EOF
 set -euo pipefail
-test -s /tmp/pl-logo.b64
 sudo -u odoo /opt/odoo/venv/bin/odoo shell -c /etc/odoo/odoo.conf -d pes_crm --no-http <<'PYEOF'
-import base64
-CO_ID=3; WEB_ID=8
-LOGO=open('/tmp/pl-logo.b64','rb').read().strip()
+WEB_ID=8; CO_ID=3
+LOGO=b'${B64}'
+V=env['ir.ui.view'].sudo()
 C=env['res.company'].sudo().browse(CO_ID)
 W=env['website'].sudo().browse(WEB_ID)
-assert C.exists() and W.exists()
-C.write({
-  'logo': LOGO,
-  'email': 'portal@portlandialogistics.com',
-  'phone': '+1 502-385-3399',
-  'website': 'https://portlandialogistics.com',
-})
-if C.partner_id:
-    C.partner_id.write({
-      'email': 'portal@portlandialogistics.com',
-      'phone': '+1 502-385-3399',
-      'website': 'https://portlandialogistics.com',
-    })
-# Bind website to company
-W.write({'company_id': CO_ID, 'name': 'Portlandia Logistics Portal'})
-# Prune public top-nav menus that are not relevant to a logistics portal
+C.write({'logo': LOGO,'email':'portal@portlandialogistics.com','phone':'+1 502-385-3399','website':'https://portlandialogistics.com'})
+if C.partner_id: C.partner_id.write({'email':'portal@portlandialogistics.com','phone':'+1 502-385-3399','website':'https://portlandialogistics.com'})
+W.write({'company_id': CO_ID,'name':'Portlandia Logistics Portal','logo': LOGO})
+# Prune unused public top-nav menus
 M=env['website.menu'].sudo()
-bad_prefixes=('/shop','/event','/forum','/blog','/slides','/appointment','/jobs','/courses')
-menus=M.search([('website_id','=',WEB_ID)])
-for m in menus:
+bad=('/shop','/event','/forum','/blog','/slides','/appointment','/jobs','/courses')
+for m in M.search([('website_id','=',WEB_ID)]):
     u=(m.url or '').lower()
-    if any(u.startswith(p) for p in bad_prefixes):
-        print('UNLINK menu', m.id, m.name, u)
+    if any(u.startswith(p) for p in bad):
         try: m.unlink()
-        except Exception as e: print('skip', m.id, e)
-env.cr.commit()
-print('OK rebrand company=%s website=%s'%(C.id,W.id))
+        except Exception: pass
+def patch(view_id, pairs):
+    g=V.browse(view_id); arch=g.arch_db or ''; new=arch; changed=False
+    for a,b in pairs:
+        if a in new: new=new.replace(a,b); changed=True
+    if not changed: return
+    t=V.search([('key','=',g.key),('website_id','=',WEB_ID)],limit=1)
+    if t: t.write({'arch_db':new})
+    else: V.create({'key':g.key,'name':g.name+' (PL)','type':g.type,'arch_db':new,'website_id':WEB_ID,'mode':g.mode,'priority':g.priority,'inherit_id':g.inherit_id.id if g.inherit_id else False})
+# footer custom
+patch(1532,[
+  ("We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.",
+   'Portlandia Logistics is a customer-obsessed transportation and logistics partner. We move freight across truckload, LTL, intermodal and drayage with national-3PL reliability and a dedicated single point of contact for every load.'),
+  ('Our products are designed for small to medium size companies willing to optimize their performance.',
+   'Shippers across North America trust Portlandia Logistics for transparent pricing, real-time visibility, and proactive communication on every shipment.'),
+  ('info@yourcompany.example.com','portal@portlandialogistics.com'),
+  ('+1 555-555-5556','+1 502-385-3399'),
+])
+# header phone widget
+patch(1603,[('+1 555-555-5556','+1 502-385-3399'),('555-555-5556','502-385-3399')])
+# contactus page
+for v in V.search([('key','=','website.contactus'),('website_id','=',False)]):
+    patch(v.id,[('+1 555-555-5556','+1 502-385-3399'),('555-555-5556','502-385-3399'),('info@yourcompany.example.com','portal@portlandialogistics.com')])
+env.cr.commit(); print('OK rebrand company=%s website=%s'%(C.id,W.id))
 PYEOF
-REMOTE
+EOF
+"$DIR/ssh.sh" "sudo bash -s" < /tmp/_rebrand.sh
