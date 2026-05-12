@@ -348,7 +348,7 @@ const BlogPortal = () => {
             <div key={blog._id} className="bg-white rounded-[2rem] border border-gray-100 group shadow-sm hover:shadow-xl transition-all duration-500">
               <div className="relative h-64 overflow-hidden rounded-t-[2rem]">
                 <Image 
-                  src={blog.imageUrl || "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800"} 
+                  src={blog.imageUrl || "https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&q=80&w=800"} 
                   alt={blog.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 
