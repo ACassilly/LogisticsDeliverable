@@ -31,7 +31,7 @@ jobs:
           pnpm install --no-frozen-lockfile
           NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
           pm2 delete portlandia-logistics 2>/dev/null || true
-          pm2 start node_modules/.bin/next --name portlandia-logistics -- start -p 3000
+          pm2 start node_modules/next/dist/bin/next --name portlandia-logistics -- start -p 3000
           pm2 save
           sleep 3
           curl --fail --silent --show-error http://localhost:3000
