@@ -1,8 +1,8 @@
+// Real blog imagery from the original muzzammil zip, shipped under public/images/Blog/.
 const BLOG_IMAGE_FALLBACKS = [
-  '/images/blog/post-1.jpg',
-  '/images/blog/post-2.jpg',
-  '/images/blog/post-3.jpg',
-  '/images/blog/post-4.jpg',
+  '/images/Blog/blog-frame1.png',
+  '/images/Blog/blog-frame2.png',
+  '/images/Blog/blog-frame3.png',
 ];
 
 export function resolveBlogImageSrc(imageUrl?: string, index: number = 0): string {
@@ -14,6 +14,13 @@ export function resolveBlogImageSrc(imageUrl?: string, index: number = 0): strin
 
   const trimmed = imageUrl.trim();
   if (!trimmed) {
+    return fallback;
+  }
+
+  // The legacy /images/blog/post-{1..4}.jpg files in the canonical repo are 1x1
+  // placeholder pixels (the zip never shipped real post-N.jpg files). Force the
+  // real Blog/blog-frameN.png imagery from the zip instead.
+  if (/^\/images\/blog\/post-[1-4]\.jpg$/i.test(trimmed)) {
     return fallback;
   }
 
