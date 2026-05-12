@@ -4,7 +4,7 @@
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO="$(cd "$DIR/../.." && pwd)"
-LOGO="$REPO/public/images/logo/logo-white.png"
+LOGO="$REPO/public/images/logo/logo.png"
 test -s "$LOGO"
 B64="$(base64 -w0 "$LOGO")"
 cat > /tmp/_rebrand.sh <<EOF
