@@ -1,39 +1,89 @@
 const ODOO_URL = process.env.ODOO_URL || 'https://id.portlandialogistics.com';
-const ODOO_DB = process.env.ODOO_DB || 'portlandia';
-const ODOO_USERNAME = process.env.ODOO_USERNAME || '';
+const ODOO_DB = process.env.ODOO_DB || 'portlandia_logistics';
 const ODOO_API_KEY = process.env.ODOO_API_KEY || '';
 
-async function jsonRpc(url: string, method: string, params: any): Promise<any> {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ jsonrpc: '2.0', method: 'call', params, id: Date.now() }),
-  });
-  const data = await response.json();
-  if (data.error) throw new Error(data.error.message);
-  return data.result;
-}
-
-async function call(service: string, method: string, args: any[]): Promise<any> {
-  const url = `${ODOO_URL}/jsonrpc`;
-  const params = {
-    service,
-    method,
-    args,
+/**
+ * Make a request to Odoo 19's JSON-2 API endpoint
+ */
+async function jsonApi(
+  endpoint: string,
+  method: 'GET' | 'POST' = 'POST',
+  payload?: any
+): Promise<any> {
+  const url = `${ODOO_URL}/json/2/${endpoint}`;
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${ODOO_API_KEY}`,
+    'X-Odoo-Database': ODOO_DB,
   };
-  return jsonRpc(url, 'call', params);
+
+  const response = await fetch(url, {
+    method,
+    headers,
+    body: payload ? JSON.stringify(payload) : undefined,
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Odoo API error (${response.status}): ${error}`);
+  }
+
+  return response.json();
 }
 
-export async function authenticate(): Promise<number> {
-  return await call('common', 'authenticate', [ODOO_DB, ODOO_USERNAME, ODOO_API_KEY, {}]);
+/**
+ * Search and read records from Odoo model
+ */
+export async function odooSearchRead(
+  model: string,
+  domain: any[] = [],
+  fields: string[] = []
+): Promise<any[]> {
+  const payload = {
+    domain,
+    fields: fields.length > 0 ? fields : undefined,
+  };
+  return jsonApi(`model/${model}/read_group`, 'POST', payload);
 }
 
-export async function searchRead(model: string, domain: any[], fields: string[], uid: number): Promise<any[]> {
-  return await call('object', 'execute_kw', [ODOO_DB, uid, ODOO_API_KEY, model, 'search_read', [domain], { fields }]);
+/**
+ * Read specific records by IDs
+ */
+export async function odooRead(
+  model: string,
+  ids: number[],
+  fields: string[] = []
+): Promise<any[]> {
+  const payload = {
+    ids,
+    fields: fields.length > 0 ? fields : undefined,
+  };
+  return jsonApi(`model/${model}/read`, 'POST', payload);
 }
 
-export async function execute(model: string, method: string, args: any[], uid: number): Promise<any> {
-  return await call('object', 'execute_kw', [ODOO_DB, uid, ODOO_API_KEY, model, method, args]);
+/**
+ * Create a new record in Odoo model
+ */
+export async function odooCreate(
+  model: string,
+  values: Record<string, any>
+): Promise<number> {
+  const payload = { values };
+  const result = await jsonApi(`model/${model}/create`, 'POST', payload);
+  return result.id;
+}
+
+/**
+ * Update records in Odoo model
+ */
+export async function odooWrite(
+  model: string,
+  ids: number[],
+  values: Record<string, any>
+): Promise<boolean> {
+  const payload = { ids, values };
+  await jsonApi(`model/${model}/write`, 'POST', payload);
+  return true;
 }
 
 export const PORTAL_GROUP_MAP: Record<string, string> = {
