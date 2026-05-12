@@ -42,7 +42,7 @@ const FALLBACK_BLOGS = [
     id: 1,
     title: "How Real-Time Visibility Improves Supply Chain Efficiency",
     excerpt: "Learn how better tracking and communication reduce delays and improve planning.",
-    image: "/images/blog/post-1.jpg",
+    image: "/images/services/ltl-hero.png1.jpg",
     category: "Industry Insights",
     date: "Feb 2, 2026"
   },
@@ -50,7 +50,7 @@ const FALLBACK_BLOGS = [
     id: 2,
     title: "5 Ways to Reduce Freight Costs Without Sacrificing Service",
     excerpt: "Practical strategies to optimize your logistics budget while maintaining quality.",
-    image: "/images/blog/post-2.jpg",
+    image: "/images/services/ltl-hero.png2.jpg",
     category: "Cost Optimization",
     date: "Jan 28, 2026"
   },
@@ -58,7 +58,7 @@ const FALLBACK_BLOGS = [
     id: 3,
     title: "The Future of LTL Shipping: Trends to Watch in 2026",
     excerpt: "Emerging technologies and market shifts shaping the less-than-truckload industry.",
-    image: "/images/blog/post-3.jpg",
+    image: "/images/services/ltl-hero.png3.jpg",
     category: "Market Trends",
     date: "Jan 25, 2026"
   },
@@ -66,7 +66,7 @@ const FALLBACK_BLOGS = [
     id: 4,
     title: "How Real-Time Visibility Improves Supply Chain Efficiency",
     excerpt: "Learn how better tracking and communication reduce delays and improve planning.",
-    image: "/images/blog/post-1.jpg",
+    image: "/images/services/ltl-hero.png1.jpg",
     category: "Industry Insights",
     date: "Feb 2, 2026"
   },
@@ -74,7 +74,7 @@ const FALLBACK_BLOGS = [
     id: 5,
     title: "5 Ways to Reduce Freight Costs Without Sacrificing Service",
     excerpt: "Practical strategies to optimize your logistics budget while maintaining quality.",
-    image: "/images/blog/post-2.jpg",
+    image: "/images/services/ltl-hero.png2.jpg",
     category: "Cost Optimization",
     date: "Jan 28, 2026"
   },
@@ -82,7 +82,7 @@ const FALLBACK_BLOGS = [
     id: 6,
     title: "The Future of LTL Shipping: Trends to Watch in 2026",
     excerpt: "Emerging technologies and market shifts shaping the less-than-truckload industry.",
-    image: "/images/blog/post-3.jpg",
+    image: "/images/services/ltl-hero.png3.jpg",
     category: "Market Trends",
     date: "Jan 25, 2026"
   }
@@ -104,7 +104,7 @@ export function BlogSection() {
         id: blog.slug || blog._id,
         title: blog.title,
         description: blog.excerpt || "Read this insightful article.",
-        image: blog.imageUrl || "/images/blog/post-1.jpg",
+        image: blog.imageUrl || "/images/services/ltl-hero.png1.jpg",
         category: getCategoryName(blog.category),
         date: formatDate(blog.publishedAt || blog.createdAt)
       }))
