@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { BlogCard } from '@/components/landing/blog/BlogCard';
+import { resolveBlogImageSrc } from '@/components/landing/blog/blog-image';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { getPublishedBlogs } from '@/services/blog.service';
 import { BLOG_CATEGORIES } from '@/constants';
@@ -64,11 +65,11 @@ export function BlogPostsGrid() {
   });
 
   // Transform API data to match UI format
-  const blogPosts = data?.data?.map((blog: Blog) => ({
+  const blogPosts = data?.data?.map((blog: Blog, index) => ({
     id: blog.slug,
     title: blog.title,
     description: blog.excerpt || stripHtml(blog.content).substring(0, 150) + '...',
-    image: blog.imageUrl || "/images/services/ltl-hero.png",
+    image: resolveBlogImageSrc(blog.imageUrl, index),
     category: getCategoryName(blog.category),
     date: formatDate(blog.publishedAt || blog.createdAt)
   })) || [];
