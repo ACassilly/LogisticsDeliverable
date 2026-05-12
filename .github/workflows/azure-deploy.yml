@@ -30,6 +30,9 @@ jobs:
           npm install -g pnpm || true
           pnpm install --no-frozen-lockfile
           NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
+          sudo pkill -f "PM2|pm2\b" 2>/dev/null || true
+          sudo fuser -k 3000/tcp 2>/dev/null || true
+          sleep 2
           pm2 kill 2>/dev/null || true
           pm2 start node_modules/next/dist/bin/next --name portlandia-logistics -- start -p 3000
           pm2 save
