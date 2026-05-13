@@ -366,6 +366,96 @@
           "title": "Detention Avoidance",
           "description": "Strategic planning and coordination minimize costly detention and demurrage charges through efficient scheduling and proactive container management."
         }
+    }
+  },
+  "specialized": {
+    "slug": "specialized",
+    "title": "Specialized & Heavy Haul",
+    "shortDescription": "Expert handling for oversized, heavy, and specialized freight",
+    "hero": {
+      "title": "Specialized & Heavy Haul Services",
+      "description": "Portlandia Logistics specializes in moving oversized, overweight, and specialized freight that requires expert handling and specialized equipment. From construction machinery to industrial components, we ensure safe and compliant transportation.",
+      "imageUrl": "/images/services/customer-support.jpg",
+      "highlights": [
+        "Oversized load expertise",
+        "Specialized equipment fleet",
+        "Regulatory compliance"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Specialized?",
+      "subtitle": "Expert handling, specialized equipment, and regulatory expertise designed to move your heavy and oversized freight safely and efficiently.",
+      "items": [
+        {
+          "title": "Oversized Load Specialists",
+          "description": "Expertise in handling loads exceeding standard dimensions with proper permitting and route planning.",
+          "icon": "TruckIcon"
+        },
+        {
+          "title": "Heavy Equipment Transport",
+          "description": "Specialized trailers and rigging for machinery, construction equipment, and industrial components.",
+          "icon": "Settings"
+        },
+        {
+          "title": "Regulatory Compliance",
+          "description": "Navigate complex DOT regulations, permits, and escort requirements for oversized shipments.",
+          "icon": "Shield"
+        },
+        {
+          "title": "Project Coordination",
+          "description": "End-to-end project management for complex moves requiring multiple pieces of equipment.",
+          "icon": "ClipboardList"
+        },
+        {
+          "title": "Specialized Fleet",
+          "description": "Access to flatbed trailers, lowboys, extendable trailers, and heavy-duty equipment.",
+          "icon": "Truck"
+        },
+        {
+          "title": "Risk Management",
+          "description": "Comprehensive insurance coverage and safety protocols for high-value specialized freight.",
+          "icon": "Lock"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Specialized Shipping?",
+      "description": "Specialized shipping handles freight that exceeds standard truckload dimensions or requires special handling due to weight, shape, or fragility. This includes construction equipment, industrial machinery, oversized components, and hazardous materials requiring expert coordination.",
+      "imageUrl": "/images/services/intermodal.jpg",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Specialized Shipping",
+      "description": "We make specialized shipping straightforward and reliable. With Portlandia Logistics, our expert team handles permitting, route planning, and equipment coordination ensuring your oversized and heavy freight arrives safely and on schedule.",
+      "buttonText": "Book your Specialized Shipment \u2192",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Complex Freight",
+      "imageUrl": "/images/about/operations-team.png",
+      "items": [
+        {
+          "title": "Expert Coordination",
+          "description": "Our specialized team handles all aspects of oversized moves, from permitting to final delivery, ensuring compliance and safety at every step."
+        },
+        {
+          "title": "Equipment Matching",
+          "description": "We match your freight with the right equipment and carriers, whether you need flatbeds for construction equipment or specialized trailers for industrial components."
+        }
       ],
       "buttonText": "Get a Quote",
       "buttonLink": "/quote"
