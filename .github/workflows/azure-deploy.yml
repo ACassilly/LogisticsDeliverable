@@ -25,7 +25,7 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USERNAME@$SSH_HOST" << 'DEPLOY'
           set -e
           cd /opt/LogisticsDeliverable
-          git pull origin main
+          git fetch origin main && git reset --hard origin/main
           export CI=true
           npm install -g pnpm || true
           pnpm install --no-frozen-lockfile
