@@ -1,0 +1,17 @@
+FRONT /carriers -> 404 12378B 0.178013s
+FRONT /services/specialized -> 404 13518B 0.096111s
+FRONT /privacy -> 404 12378B 0.089490s
+FRONT /terms -> 404 12378B 0.089510s
+FRONT /portal -> 404 12378B 0.096988s
+FRONT /sitemap.xml -> 404 12378B 0.087714s
+BACK1 /web/health -> 200 18B 0.163033s
+BACK1 /odoo -> 303 247B 0.100197s
+BACK1 /web/database/list -> 415 315B 0.080512s
+BACK2 /odoo -> 303 247B 0.168138s
+BACK2 /web/database/list -> 415 315B 0.164598s
+=== DUP CHECK ===
+POST /api/quote -> 404
+POST /api/contact -> 400
+POST /api/carrier-signup -> 404
+POST /api/newsletter -> 404
+POST /api/health -> 405

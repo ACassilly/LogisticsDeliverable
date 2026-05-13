@@ -1,0 +1,40 @@
+audit 20260513T093446Z
+FRONT / -> 200 139529B 0.262877s
+FRONT /about -> 200 80937B 0.188921s
+FRONT /carriers -> 404 12378B 0.178013s
+FRONT /blog -> 200 50544B 0.185565s
+FRONT /contact -> 200 52148B 0.101054s
+FRONT /quote -> 200 50007B 0.192319s
+FRONT /services/ftl -> 200 74350B 0.127042s
+FRONT /services/ltl -> 200 74436B 0.132491s
+FRONT /services/specialized -> 404 13518B 0.096111s
+FRONT /services/intermodal -> 200 74205B 0.122682s
+FRONT /services/drayage -> 200 73693B 0.231383s
+FRONT /privacy -> 404 12378B 0.089490s
+FRONT /terms -> 404 12378B 0.089510s
+FRONT /login -> 200 14397B 0.102789s
+FRONT /portal -> 404 12378B 0.096988s
+FRONT /sitemap.xml -> 404 12378B 0.087714s
+FRONT /robots.txt -> 200 1738B 0.176395s
+BACK1 / -> 200 26740B 0.215510s
+BACK1 /web/login -> 200 29760B 0.293773s
+BACK1 /web/database/selector -> 200 42630B 0.981379s
+BACK1 /web/health -> 200 18B 0.163033s
+BACK1 /odoo -> 303 247B 0.100197s
+BACK1 /web/database/list -> 415 315B 0.080512s
+BACK1 /website/info -> 200 57633B 0.234983s
+BACK2 / -> 200 35660B 0.271674s
+BACK2 /web/login -> 200 22672B 0.196941s
+BACK2 /web/database/selector -> 200 42630B 0.952000s
+BACK2 /web/health -> 200 18B 0.093137s
+BACK2 /odoo -> 303 247B 0.168138s
+BACK2 /web/database/list -> 415 315B 0.164598s
+BACK2 /website/info -> 200 50543B 0.228960s
+=== DUP CHECK ===
+=== POST PROBE ===
+POST /api/quote -> 404
+POST /api/contact -> 400
+POST /api/carrier-signup -> 404
+POST /api/newsletter -> 404
+POST /api/health -> 405
+=== FAILURES SUMMARY ===
