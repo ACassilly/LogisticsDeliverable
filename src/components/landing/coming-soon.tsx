@@ -17,7 +17,7 @@ export function ComingSoon({
     <div className="min-h-screen bg-white">
       {/* Hero Section with Gradient */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[var(--primary-darker)] via-[var(--primary)] to-[var(--primary-light)] py-20 sm:py-32 lg:py-40">
-        <div className="absolute inset-0 bg-[url('/images/hero/pattern.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/images/hero/pattern-bg.svg')] opacity-10"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Icon */}

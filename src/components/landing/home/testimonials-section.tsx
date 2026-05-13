@@ -16,42 +16,42 @@ const testimonials = [
     quote: "We switched from our previous broker after they couldn't handle our JIT requirements. Portlandia's 2-hour response time and 99% fill rate means our production line never stops. Game changer.",
     author: "Sarah Chen",
     position: "VP of Operations, Acme Manufacturing",
-    avatar: "/images/services/customer-support.jpg"
+    avatar: "/images/trust-section/trust-sec-image1.jpg"
   },
   {
     id: 2,
     quote: "The transparency is refreshing. No hidden fees, real-time tracking, and they actually answer the phone. We've reduced our logistics costs by 18% while improving our delivery times.",
     author: "Marcus Johnson",
     position: "Supply Chain Director, TechCore Industries",
-    avatar: "/images/services/customer-support.jpg"
+    avatar: "/images/trust-section/trust-sec-image2.jpg"
   },
   {
     id: 3,
     quote: "During the peak season chaos, Portlandia secured capacity when others couldn't. Their carrier network and relationships saved our Q4. We're never going back to our old broker.",
     author: "Jennifer Martinez",
     position: "Logistics Manager, RetailPro",
-    avatar: "/images/services/customer-support.jpg"
+    avatar: "/images/trust-section/trust-sec-image3.jpg"
   },
   {
     id: 4,
     quote: "Best decision we made was partnering with Portlandia. Their specialized equipment expertise helped us transport oversized machinery without a hitch. Professional team from start to finish.",
     author: "David Thompson",
     position: "Operations Lead, BuildRight Construction",
-    avatar: "/images/services/customer-support.jpg"
+    avatar: "/images/trust-section/trust-sec-image1.jpg"
   },
   {
     id: 5,
     quote: "Best decision we made was partnering with Portlandia. Their specialized equipment expertise helped us transport oversized machinery without a hitch. Professional team from start to finish.",
     author: "David Thompson",
     position: "Operations Lead, BuildRight Construction",
-    avatar: "/images/services/customer-support.jpg"
+    avatar: "/images/trust-section/trust-sec-image2.jpg"
   },
   {
     id: 6,
     quote: "Best decision we made was partnering with Portlandia. Their specialized equipment expertise helped us transport oversized machinery without a hitch. Professional team from start to finish.",
     author: "David Thompson",
     position: "Operations Lead, BuildRight Construction",
-    avatar: "/images/services/customer-support.jpg"
+    avatar: "/images/trust-section/trust-sec-image3.jpg"
   }
 ];
 
