@@ -170,7 +170,7 @@
     },
     "builtFor": {
       "title": "Built for Every Shipment",
-      "imageUrl": "/images/services/customer-support.jpg",
+      "imageUrl": "/images/about/operations-team.png",
       "items": [
         {
           "title": "Dedicated Capacity",
@@ -250,7 +250,7 @@
     "whatIs": {
       "title": "What Is Intermodal Transportation?",
       "description": "Intermodal transportation combines rail and truck to move freight efficiently over long distances. By using rail for the long-haul portion and trucks for pickup and delivery, this method offers significant cost savings and environmental benefits while maintaining reliable service.",
-      "imageUrl": "/images/services/intermodal.jpg",
+      "imageUrl": "/images/about/technology.png",
       "buttonText": "Contact us to Know More",
       "buttonLink": "/contact"
     },
@@ -263,7 +263,7 @@
     },
     "builtFor": {
       "title": "Built for Every Shipment",
-      "imageUrl": "/images/services/customer-support.jpg",
+      "imageUrl": "/images/trust-section/trust-sec-image1.jpg",
       "items": [
         {
           "title": "Cost-Effective Long Haul",
@@ -285,7 +285,7 @@
     "hero": {
       "title": "Professional Drayage Services",
       "description": "Portlandia Logistics' Drayage services ensure efficient container movement to and from ports and rail terminals. Our experienced drivers and modern equipment handle the critical first and last mile of your intermodal shipments.",
-      "imageUrl": "/images/services/intermodal.jpg",
+      "imageUrl": "/images/about/who-we-are.png",
       "highlights": [
         "Port-certified drivers",
         "Chassis fleet access",
@@ -343,7 +343,7 @@
     "whatIs": {
       "title": "What Is Drayage?",
       "description": "Drayage is the short-distance transport of shipping containers between ports, rail terminals, and your facility\u2014typically within a 50-mile radius. It's the critical first and last mile connection in the intermodal supply chain, ensuring your containers move efficiently through the transportation network.",
-      "imageUrl": "/images/services/ltl.jpg",
+      "imageUrl": "/images/services/intermodal.jpg",
       "buttonText": "Contact us to Know More",
       "buttonLink": "/contact"
     },
@@ -356,7 +356,7 @@
     },
     "builtFor": {
       "title": "Built for Every Shipment",
-      "imageUrl": "/images/services/customer-support.jpg",
+      "imageUrl": "/images/trust-section/trust-sec-image2.jpg",
       "items": [
         {
           "title": "Port Expertise",
