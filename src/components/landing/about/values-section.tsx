@@ -18,22 +18,22 @@ export function Values() {
     {
       title: "Execution First",
       description: "We don't just talk logistics  we execute it. Our track record proves our ability to turn strategy to track delivery.",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+      image: "/images/services/ltl.jpg",
     },
     {
       title: "Partnership",
       description: "We work hand-in-hand with clients, carriers, and drivers to build trust and create wins for everyone.",
-      image: "/images/services/ltl-hero.png",
+      image: "/images/services/customer-support.jpg",
     },
     {
       title: "Quality",
       description: "Every shipment is handled with the highest standard. We prioritize attention to every detail.",
-      image: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&h=300&fit=crop",
+      image: "/images/services/built-for-ltl.png",
     },
     {
       title: "Innovation",
       description: "Leveraging technology to provide better insights, faster service, and smarter logistics.",
-      image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop",
+      image: "/images/services/customer-support.jpg",
     },
   ]
 

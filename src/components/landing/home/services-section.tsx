@@ -23,7 +23,7 @@ const services = {
       "Average transit time 20% faster than LTL"
     ],
     cta: "Request FTL Quote",
-    image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=700&h=458&fit=crop"
+    image: "/images/services/ltl.jpg"
   },
   intermodal: {
     id: "intermodal",
@@ -36,7 +36,7 @@ const services = {
       "Ideal for 750+ mile shipments"
     ],
     cta: "Learn More",
-    image: "/images/services/ltl-hero.png"
+    image: "/images/services/intermodal.jpg"
   },
   ltl: {
     id: "ltl",
@@ -49,7 +49,7 @@ const services = {
       "Real-time tracking and POD"
     ],
     cta: "Get LTL Quote",
-    image: "/images/services/what-is-ltl.png"
+    image: "/images/services/ltl-hero.png"
   },
   specialized: {
     id: "specialized",
@@ -62,7 +62,7 @@ const services = {
       "White glove delivery services"
     ],
     cta: "Discuss Requirements",
-    image: "/images/services/ltl.jpg"
+    image: "/images/services/specialized.jpg"
   },
   support: {
     id: "support",
@@ -75,7 +75,7 @@ const services = {
       "Proactive issue resolution"
     ],
     cta: "Contact Support",
-    image: "/images/services/ltl-hero.png"
+    image: "/images/services/customer-support.jpg"
   }
 };
 
