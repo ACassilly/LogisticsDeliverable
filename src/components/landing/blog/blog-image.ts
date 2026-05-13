@@ -3,6 +3,9 @@ const BLOG_IMAGE_FALLBACKS = [
   '/images/Blog/blog-frame1.png',
   '/images/Blog/blog-frame2.png',
   '/images/Blog/blog-frame3.png',
+  '/images/about/who-we-are.png',
+  '/images/about/customer-succes.png',
+  '/images/about/hero.png',
 ];
 
 export function resolveBlogImageSrc(imageUrl?: string, index: number = 0): string {

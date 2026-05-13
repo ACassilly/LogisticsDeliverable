@@ -67,8 +67,8 @@ export function TrustedLogisticsSolutions() {
             {/* Top Left - Large Image */}
             <div className="col-span-1 row-span-2 relative rounded-[20px] overflow-hidden h-full min-h-[400px] lg:min-h-[500px] z-20">
               <Image
-                src="/images/services/ltl.jpg"
-                alt="Logistics Truck on Highway"
+                src="/images/about/hero.png"
+                alt="Logistics Operations"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 50vw, 25vw"
@@ -78,8 +78,8 @@ export function TrustedLogisticsSolutions() {
             {/* Top Right - Container Image */}
             <div className="col-span-1 relative rounded-4xl overflow-hidden h-69.5 lg:h-69.5">
               <Image
-                src="/images/services/built-for-ltl.png"
-                alt="Shipping Containers"
+                src="/images/about/operations-team.png"
+                alt="Logistics Team Collaboration"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 50vw, 25vw"
@@ -89,7 +89,7 @@ export function TrustedLogisticsSolutions() {
             {/* Bottom Right - Technology Image */}
             <div className="col-span-1 relative rounded-4xl overflow-hidden h-69.5 lg:h-69.5">
               <Image
-                src="/images/trust-section/trust-sec-image3.jpg"
+                src="/images/about/technology.png"
                 alt="Logistics Technology"
                 fill
                 className="object-cover"

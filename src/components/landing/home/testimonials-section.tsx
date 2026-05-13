@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from "react";
-import Image from "next/image";
 import { MoveRight, MoveLeft } from "lucide-react";
 import {
   Carousel,
@@ -10,48 +9,63 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 
-const testimonials = [
+interface Testimonial {
+  id: number;
+  quote: string;
+  author: string;
+  position: string;
+  initials: string;
+  color: string;
+}
+
+const testimonials: Testimonial[] = [
   {
     id: 1,
     quote: "We switched from our previous broker after they couldn't handle our JIT requirements. Portlandia's 2-hour response time and 99% fill rate means our production line never stops. Game changer.",
     author: "Sarah Chen",
     position: "VP of Operations, Acme Manufacturing",
-    avatar: "/images/trust-section/trust-sec-image1.jpg"
+    initials: "SC",
+    color: "bg-[#0F4C81]"
   },
   {
     id: 2,
     quote: "The transparency is refreshing. No hidden fees, real-time tracking, and they actually answer the phone. We've reduced our logistics costs by 18% while improving our delivery times.",
     author: "Marcus Johnson",
     position: "Supply Chain Director, TechCore Industries",
-    avatar: "/images/trust-section/trust-sec-image2.jpg"
+    initials: "MJ",
+    color: "bg-[#1F7A4C]"
   },
   {
     id: 3,
     quote: "During the peak season chaos, Portlandia secured capacity when others couldn't. Their carrier network and relationships saved our Q4. We're never going back to our old broker.",
     author: "Jennifer Martinez",
     position: "Logistics Manager, RetailPro",
-    avatar: "/images/trust-section/trust-sec-image3.jpg"
+    initials: "JM",
+    color: "bg-[#8A3FFC]"
   },
   {
     id: 4,
     quote: "Best decision we made was partnering with Portlandia. Their specialized equipment expertise helped us transport oversized machinery without a hitch. Professional team from start to finish.",
     author: "David Thompson",
     position: "Operations Lead, BuildRight Construction",
-    avatar: "/images/trust-section/trust-sec-image1.jpg"
+    initials: "DT",
+    color: "bg-[#D97706]"
   },
   {
     id: 5,
     quote: "Best decision we made was partnering with Portlandia. Their specialized equipment expertise helped us transport oversized machinery without a hitch. Professional team from start to finish.",
     author: "David Thompson",
     position: "Operations Lead, BuildRight Construction",
-    avatar: "/images/trust-section/trust-sec-image2.jpg"
+    initials: "DT",
+    color: "bg-[#0C4A6E]"
   },
   {
     id: 6,
     quote: "Best decision we made was partnering with Portlandia. Their specialized equipment expertise helped us transport oversized machinery without a hitch. Professional team from start to finish.",
     author: "David Thompson",
     position: "Operations Lead, BuildRight Construction",
-    avatar: "/images/trust-section/trust-sec-image3.jpg"
+    initials: "DT",
+    color: "bg-[#9333EA]"
   }
 ];
 
@@ -107,13 +121,8 @@ export function TestimonialsSection() {
                 <CarouselItem key={testimonial.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
                   <div className="bg-white flex flex-col gap-4 sm:gap-10 md:gap-[50px] px-5 sm:px-6 md:px-[23px] py-6 sm:py-8 md:py-[30px] rounded-2xl shadow-sm hover:shadow-md transition-shadow h-full">
                     {/* Avatar */}
-                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-[100px] md:h-[100px] rounded-xl overflow-hidden flex-shrink-0">
-                      <Image
-                        src={testimonial.avatar}
-                        alt={testimonial.author}
-                        fill
-                        className="object-cover"
-                      />
+                    <div className={`flex items-center justify-center ${testimonial.color} rounded-full w-20 h-20 sm:w-24 sm:h-24 md:w-[100px] md:h-[100px] flex-shrink-0`}> 
+                      <span className="text-white text-lg sm:text-xl md:text-2xl font-semibold">{testimonial.initials}</span>
                     </div>
 
                     {/* Quote */}

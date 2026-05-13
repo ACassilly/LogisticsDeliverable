@@ -17,23 +17,23 @@ export function Values() {
   const values = [
     {
       title: "Execution First",
-      description: "We don't just talk logistics  we execute it. Our track record proves our ability to turn strategy to track delivery.",
-      image: "/images/services/ltl.jpg",
+      description: "We don't just talk logistics — we execute it. Our track record proves our ability to turn strategy to track delivery.",
+      image: "/images/about/value1.png",
     },
     {
       title: "Partnership",
       description: "We work hand-in-hand with clients, carriers, and drivers to build trust and create wins for everyone.",
-      image: "/images/services/customer-support.jpg",
+      image: "/images/about/value2.png",
     },
     {
       title: "Quality",
       description: "Every shipment is handled with the highest standard. We prioritize attention to every detail.",
-      image: "/images/services/built-for-ltl.png",
+      image: "/images/about/value3.png",
     },
     {
       title: "Innovation",
       description: "Leveraging technology to provide better insights, faster service, and smarter logistics.",
-      image: "/images/services/customer-support.jpg",
+      image: "/images/about/value4.png",
     },
   ]
 
