@@ -8,10 +8,10 @@ export function Logo({ className = "" }: { className?: string }) {
         style={{ width: "300px", height: "40px" }}
       >
         <Image
-          src="/images/logo/logo.svg"
+          src="/images/logo/logo.png"
           alt="Portlandia Logistics"
-          width={200}
-          height={20}
+          width={162}
+          height={72}
           priority
           className="block"
         />

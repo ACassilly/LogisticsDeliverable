@@ -276,11 +276,11 @@ export function Footer() {
           <div className="text-center md:text-left w-full md:w-auto">
             <div className="mb-3 flex justify-center md:justify-start">
               <Image 
-                src="/images/logo/logo.svg" 
+                src="/images/logo/logo.png" 
                 alt="Portlandia Logistics" 
-                width={200} 
-                height={32}
-                className="sm:w-[250px] sm:h-[40px]"
+                width={180}
+                height={80}
+                className="sm:w-[200px] sm:h-[89px]"
               />
             </div>
             <p className="text-xs sm:text-sm text-[var(--text-footer-muted)]">
