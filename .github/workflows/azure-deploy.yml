@@ -26,11 +26,12 @@ jobs:
           set -e
           cd /opt/LogisticsDeliverable
           git fetch origin main && git reset --hard origin/main
-          # Safety net: strip any residual bg-[url(/images/hero/pattern-bg.svg)] arbitrary classes
-          grep -rl "bg-\[url('/images/hero/pattern-bg.svg')\]" src 2>/dev/null | xargs -r sed -i "s|bg-\[url('/images/hero/pattern-bg.svg')\]||g" || true
-          grep -rl 'bg-\[url(/images/hero/pattern-bg.svg)\]' src 2>/dev/null | xargs -r sed -i 's|bg-\[url(/images/hero/pattern-bg.svg)\]||g' || true
+          # Build the pattern dynamically so this YAML file never contains the literal bg-[url(...)] class
+          # that Tailwind v4's content scanner would otherwise pick up
+          ASSET="pattern-bg.svg"
+          PATTERN="bg-\\[url('/images/hero/$ASSET')\\]"
+          grep -rl "$PATTERN" src 2>/dev/null | xargs -r sed -i "s|$PATTERN||g" || true
           export CI=true
-          # Use corepack (bundled with Node) to get pnpm without global npm perms
           corepack enable || sudo corepack enable
           corepack prepare pnpm@latest --activate || sudo corepack prepare pnpm@latest --activate
           pnpm install --no-frozen-lockfile
