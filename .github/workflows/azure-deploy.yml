@@ -26,11 +26,16 @@ jobs:
           set -e
           cd /opt/LogisticsDeliverable
           git fetch origin main && git reset --hard origin/main
-                      grep -rl "bg-\[url('/images/hero/pattern-bg.svg')\]" src 2>/dev/null | xargs -r sed -i "s|bg-\[url('/images/hero/pattern-bg.svg')\]||g" || true
+          # Safety net: strip any residual bg-[url(/images/hero/pattern-bg.svg)] arbitrary classes
+          grep -rl "bg-\[url('/images/hero/pattern-bg.svg')\]" src 2>/dev/null | xargs -r sed -i "s|bg-\[url('/images/hero/pattern-bg.svg')\]||g" || true
+          grep -rl 'bg-\[url(/images/hero/pattern-bg.svg)\]' src 2>/dev/null | xargs -r sed -i 's|bg-\[url(/images/hero/pattern-bg.svg)\]||g' || true
           export CI=true
-          npm install -g pnpm || true
+          # Use corepack (bundled with Node) to get pnpm without global npm perms
+          corepack enable || sudo corepack enable
+          corepack prepare pnpm@latest --activate || sudo corepack prepare pnpm@latest --activate
           pnpm install --no-frozen-lockfile
-          rm -rf .next && NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
+          rm -rf .next node_modules/.cache
+          NEXT_PUBLIC_APP_URL=https://portlandialogistics.com pnpm build
           sudo pkill -f "PM2|pm2\b" 2>/dev/null || true
           sudo fuser -k 3000/tcp 2>/dev/null || true
           sleep 2
