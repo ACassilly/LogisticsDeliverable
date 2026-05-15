@@ -26,6 +26,7 @@ jobs:
           set -e
           cd /opt/LogisticsDeliverable
           git fetch origin main && git reset --hard origin/main
+                      grep -rl "bg-\[url('/images/hero/pattern-bg.svg')\]" src 2>/dev/null | xargs -r sed -i "s|bg-\[url('/images/hero/pattern-bg.svg')\]||g" || true
           export CI=true
           npm install -g pnpm || true
           pnpm install --no-frozen-lockfile
