@@ -366,7 +366,8 @@
           "title": "Detention Avoidance",
           "description": "Strategic planning and coordination minimize costly detention and demurrage charges through efficient scheduling and proactive container management."
         }
-    }
+    ],
+          }
   },
   "specialized": {
     "slug": "specialized",
