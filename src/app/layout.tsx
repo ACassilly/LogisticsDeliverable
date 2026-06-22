@@ -10,7 +10,7 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 export const metadata: Metadata = {
   metadataBase: new URL('https://portlandialogistics.com'),
   title: 'Portlandia Logistics',
-  description: 'Modern logistics management system',
+  description: 'Portlandia Logistics — Louisville KY freight brokerage and 3PL. 24/7 dispatch for electrical, solar, OEM, and project freight. Logistics that executes.',
   alternates: { canonical: '/' },
   manifest: '/site.webmanifest',
   icons: {
