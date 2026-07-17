@@ -366,8 +366,10 @@
           "title": "Detention Avoidance",
           "description": "Strategic planning and coordination minimize costly detention and demurrage charges through efficient scheduling and proactive container management."
         }
-    ]
-          }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
   },
   "specialized": {
     "slug": "specialized",
@@ -456,6 +458,471 @@
         {
           "title": "Equipment Matching",
           "description": "We match your freight with the right equipment and carriers, whether you need flatbeds for construction equipment or specialized trailers for industrial components."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "expedited": {
+    "slug": "expedited",
+    "title": "Expedited Freight",
+    "shortDescription": "Time-critical freight brokerage with nationwide expedited coverage",
+    "hero": {
+      "title": "Expedited Freight Services",
+      "description": "When timing is critical, Portlandia Logistics delivers. Our expedited freight brokerage connects you with dedicated carriers from our nationwide network for rush shipments, tight production windows, and time-sensitive freight across LTL and FTL lanes.",
+      "imageUrl": "/images/services/ltl-hero.png",
+      "highlights": [
+        "Nationwide rush coverage",
+        "Dedicated carrier matching",
+        "Real-time shipment tracking"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Expedited?",
+      "subtitle": "Fast carrier activation, nationwide reach, and dedicated coordination built for freight that cannot wait.",
+      "items": [
+        {
+          "title": "Rapid Carrier Activation",
+          "description": "Our brokerage team taps into a nationwide carrier network to secure trucks for urgent freight in hours, not days.",
+          "icon": "Zap"
+        },
+        {
+          "title": "LTL & FTL Flexibility",
+          "description": "Whether your rush shipment needs a dedicated truck or a partial load, we match the right FTL or LTL solution.",
+          "icon": "Truck"
+        },
+        {
+          "title": "Real-Time Visibility",
+          "description": "Track expedited shipments from pickup to delivery with proactive status updates from our operations team.",
+          "icon": "MapPin"
+        },
+        {
+          "title": "Nationwide Coverage",
+          "description": "Access to 75,000+ carriers ensures expedited capacity in virtually every lane across the country.",
+          "icon": "Globe"
+        },
+        {
+          "title": "Licensed & Compliant",
+          "description": "Operating under MC-308990, every expedited move is handled with full regulatory compliance and insurance coverage.",
+          "icon": "Shield"
+        },
+        {
+          "title": "Dedicated Support",
+          "description": "A single point of contact manages your expedited shipment from quote to final delivery.",
+          "icon": "Users"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Expedited Freight?",
+      "description": "Expedited freight is time-critical shipping that requires accelerated pickup and delivery, often using dedicated trucks or priority routing. Portlandia Logistics coordinates expedited LTL and FTL brokerage to keep production lines running and deadlines met nationwide.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Expedited Shipping",
+      "description": "We make expedited shipping fast and reliable. With Portlandia Logistics, our team activates the right carrier immediately, ensuring your time-critical freight arrives on schedule, every time.",
+      "buttonText": "Book your Expedited Shipment \u2192",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Time-Critical Freight",
+      "imageUrl": "/images/about/operations-team.png",
+      "items": [
+        {
+          "title": "Rush Response Team",
+          "description": "Our operations team is on call to activate expedited capacity the moment a rush shipment comes in."
+        },
+        {
+          "title": "Priority Routing",
+          "description": "We coordinate direct, priority routing across our nationwide carrier network to minimize transit time."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "warehousing": {
+    "slug": "warehousing",
+    "title": "Warehousing & Distribution",
+    "shortDescription": "Nationwide warehousing and distribution support integrated with freight brokerage",
+    "hero": {
+      "title": "Warehousing & Distribution Services",
+      "description": "Portlandia Logistics pairs freight brokerage with warehousing and distribution solutions, giving you flexible storage, cross-docking, and fulfillment support backed by our nationwide carrier network.",
+      "imageUrl": "/images/services/intermodal.jpg",
+      "highlights": [
+        "Flexible short & long-term storage",
+        "Cross-docking capabilities",
+        "Nationwide distribution network"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Warehousing?",
+      "subtitle": "Integrated storage and distribution built on the same nationwide network that powers our FTL and LTL brokerage.",
+      "items": [
+        {
+          "title": "Flexible Storage",
+          "description": "Short and long-term warehousing options that scale with seasonal demand and inventory needs.",
+          "icon": "Warehouse"
+        },
+        {
+          "title": "Cross-Docking",
+          "description": "Efficient cross-dock transfers that reduce dwell time and speed up distribution cycles.",
+          "icon": "Boxes"
+        },
+        {
+          "title": "Distribution Network",
+          "description": "Connect stored inventory to our nationwide LTL and FTL brokerage network for seamless outbound shipping.",
+          "icon": "Globe"
+        },
+        {
+          "title": "Inventory Coordination",
+          "description": "Our team coordinates inbound and outbound freight to keep distribution schedules on track.",
+          "icon": "ClipboardList"
+        },
+        {
+          "title": "Licensed Operations",
+          "description": "All warehousing-linked freight moves under MC-308990 with full regulatory compliance.",
+          "icon": "Shield"
+        },
+        {
+          "title": "Dedicated Coordination",
+          "description": "A dedicated logistics coordinator manages storage-to-delivery handoffs end to end.",
+          "icon": "Users"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Warehousing & Distribution?",
+      "description": "Warehousing and distribution combines storage with outbound freight coordination, letting shippers stage inventory and distribute it efficiently. Portlandia Logistics integrates this with our LTL and FTL brokerage for a nationwide, single-vendor solution.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Warehousing & Distribution",
+      "description": "We make warehousing and distribution straightforward. With Portlandia Logistics, storage and freight brokerage work together so your inventory moves efficiently from dock to destination.",
+      "buttonText": "Book your Warehousing Solution \u2192",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Storage & Distribution",
+      "imageUrl": "/images/trust-section/trust-sec-image3.jpg",
+      "items": [
+        {
+          "title": "Scalable Storage",
+          "description": "Our warehousing partners provide flexible capacity that scales with your seasonal and project-based needs."
+        },
+        {
+          "title": "Seamless Handoffs",
+          "description": "Coordinated scheduling between storage and our carrier network keeps distribution moving without delay."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "final-mile": {
+    "slug": "final-mile",
+    "title": "Final Mile Delivery",
+    "shortDescription": "Reliable final mile delivery brokerage completing the last leg of your supply chain",
+    "hero": {
+      "title": "Final Mile Delivery Services",
+      "description": "Portlandia Logistics completes the last leg of your supply chain with final mile delivery brokerage, coordinating nationwide carriers for residential, commercial, and retail deliveries that require care and precision.",
+      "imageUrl": "/images/services/ltl.jpg",
+      "highlights": [
+        "Residential & commercial delivery",
+        "White-glove handling options",
+        "Nationwide last-leg coverage"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Final Mile?",
+      "subtitle": "Careful handling and nationwide coverage for the last, most visible leg of your delivery.",
+      "items": [
+        {
+          "title": "Last-Leg Expertise",
+          "description": "Specialized carriers experienced in navigating residential and commercial final mile delivery challenges.",
+          "icon": "MapPin"
+        },
+        {
+          "title": "White-Glove Options",
+          "description": "Careful handling for freight that needs inside delivery, unpacking, or placement service.",
+          "icon": "PackageCheck"
+        },
+        {
+          "title": "LTL & FTL Integration",
+          "description": "Final mile brokerage connects seamlessly with our LTL and FTL network for a complete door-to-door solution.",
+          "icon": "Truck"
+        },
+        {
+          "title": "Nationwide Coverage",
+          "description": "Access to 75,000+ carriers ensures final mile capacity in metro and rural markets alike.",
+          "icon": "Globe"
+        },
+        {
+          "title": "Licensed & Insured",
+          "description": "Every final mile move operates under MC-308990 with full compliance and insurance coverage.",
+          "icon": "Shield"
+        },
+        {
+          "title": "Delivery Coordination",
+          "description": "Our team schedules appointments and manages communication for a smooth final delivery experience.",
+          "icon": "Users"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Final Mile Delivery?",
+      "description": "Final mile delivery is the last leg of the supply chain, moving freight from a regional hub to its final residential or commercial destination. Portlandia Logistics brokers this final leg alongside our LTL and FTL services for complete nationwide coverage.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Final Mile Delivery",
+      "description": "We make final mile delivery dependable. With Portlandia Logistics, our team coordinates scheduling, handling, and delivery confirmation so the last leg of your shipment arrives without a hitch.",
+      "buttonText": "Book your Final Mile Delivery \u2192",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for the Last Leg",
+      "imageUrl": "/images/about/customer-succes.png",
+      "items": [
+        {
+          "title": "Appointment Scheduling",
+          "description": "We coordinate delivery windows directly with recipients to reduce missed deliveries and delays."
+        },
+        {
+          "title": "Careful Handling",
+          "description": "Our final mile carriers are vetted for careful handling of sensitive, fragile, or high-value freight."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "agency": {
+    "slug": "agency",
+    "title": "Agency Services",
+    "shortDescription": "Agent-model freight brokerage partnership backed by nationwide carrier reach",
+    "hero": {
+      "title": "Agency Services",
+      "description": "Portlandia Logistics offers an agency model for freight professionals and independent agents, providing back-office support, carrier network access, and brokerage infrastructure under MC-308990 so agents can focus on growing their book of business.",
+      "imageUrl": "/images/about/hero.png",
+      "highlights": [
+        "Independent agent support",
+        "Shared carrier network access",
+        "Nationwide brokerage infrastructure"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Agency Services?",
+      "subtitle": "Agent partnerships backed by nationwide carrier reach and full brokerage infrastructure.",
+      "items": [
+        {
+          "title": "Agent Partnership Model",
+          "description": "Independent agents operate under our brokerage authority with the support and infrastructure to grow their business.",
+          "icon": "Handshake"
+        },
+        {
+          "title": "Carrier Network Access",
+          "description": "Agents gain access to our nationwide network of 75,000+ carriers across LTL, FTL, and specialized freight.",
+          "icon": "Globe"
+        },
+        {
+          "title": "Back-Office Support",
+          "description": "Billing, carrier vetting, and compliance support let agents focus on customer relationships and sales.",
+          "icon": "ClipboardList"
+        },
+        {
+          "title": "Licensed Authority",
+          "description": "All agency-brokered freight moves under MC-308990, giving agents a compliant operating foundation.",
+          "icon": "Shield"
+        },
+        {
+          "title": "Technology Access",
+          "description": "Agents use our quoting, tracking, and operations tools to manage shipments efficiently.",
+          "icon": "Settings"
+        },
+        {
+          "title": "Growth Support",
+          "description": "Dedicated internal teams support agents with onboarding, training, and account growth.",
+          "icon": "TrendingUp"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Are Agency Services?",
+      "description": "Agency services let independent freight agents operate under an established brokerage's authority, gaining carrier access, compliance support, and back-office infrastructure. Portlandia Logistics' agency program pairs agents with our nationwide LTL and FTL network.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Agency Partnership",
+      "description": "We make agency partnership straightforward. With Portlandia Logistics, agents get carrier access, compliance support, and back-office infrastructure so they can focus on building their freight business.",
+      "buttonText": "Talk to Our Agency Team \u2192",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Independent Agents",
+      "imageUrl": "/images/about/who-we-are.png",
+      "items": [
+        {
+          "title": "Shared Infrastructure",
+          "description": "Agents leverage our brokerage authority, carrier network, and back-office systems to operate efficiently."
+        },
+        {
+          "title": "Dedicated Onboarding",
+          "description": "Our team supports new agents with onboarding, training, and ongoing account management."
+        }
+      ],
+      "buttonText": "Get a Quote",
+      "buttonLink": "/quote"
+    }
+  },
+  "reverse": {
+    "slug": "reverse",
+    "title": "Reverse Logistics",
+    "shortDescription": "Nationwide reverse logistics brokerage for returns, recalls, and asset recovery",
+    "hero": {
+      "title": "Reverse Logistics Services",
+      "description": "Portlandia Logistics manages the reverse flow of freight, from returns and recalls to asset recovery and liquidation, coordinating LTL and FTL carriers nationwide to move goods efficiently back through the supply chain.",
+      "imageUrl": "/images/services/customer-support.jpg",
+      "highlights": [
+        "Returns & recall coordination",
+        "Asset recovery logistics",
+        "Nationwide reverse network"
+      ],
+      "buttons": [
+        {
+          "text": "Get a Quote",
+          "link": "/quote",
+          "variant": "primary"
+        },
+        {
+          "text": "Connect with Us",
+          "link": "/contact",
+          "variant": "secondary"
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose Portlandia Logistics Reverse Logistics?",
+      "subtitle": "Coordinated returns, recalls, and asset recovery backed by our nationwide LTL and FTL brokerage network.",
+      "items": [
+        {
+          "title": "Returns Management",
+          "description": "Efficient coordination of product returns from retail, distribution, and e-commerce channels.",
+          "icon": "RefreshCw"
+        },
+        {
+          "title": "Recall Coordination",
+          "description": "Rapid response freight brokerage to support time-sensitive product recall logistics.",
+          "icon": "Undo2"
+        },
+        {
+          "title": "Asset Recovery",
+          "description": "Nationwide carrier coordination for equipment, inventory, and asset recovery moves.",
+          "icon": "Boxes"
+        },
+        {
+          "title": "LTL & FTL Flexibility",
+          "description": "Reverse flows are matched to the right LTL or FTL solution depending on volume and timeline.",
+          "icon": "Truck"
+        },
+        {
+          "title": "Licensed & Compliant",
+          "description": "Reverse logistics freight operates under MC-308990 with full regulatory compliance.",
+          "icon": "Shield"
+        },
+        {
+          "title": "Nationwide Reach",
+          "description": "Access to 75,000+ carriers ensures reverse logistics capacity across every region.",
+          "icon": "Globe"
+        }
+      ]
+    },
+    "whatIs": {
+      "title": "What Is Reverse Logistics?",
+      "description": "Reverse logistics manages the movement of goods backward through the supply chain, covering returns, recalls, repairs, and asset recovery. Portlandia Logistics brokers these reverse flows nationwide using the same LTL and FTL network that powers our forward shipments.",
+      "imageUrl": "/images/services/what-is-ltl.png",
+      "buttonText": "Contact us to Know More",
+      "buttonLink": "/contact"
+    },
+    "book": {
+      "title": "Simplified Reverse Logistics",
+      "description": "We make reverse logistics manageable. With Portlandia Logistics, our team coordinates returns, recalls, and asset recovery moves so reverse freight flows just as smoothly as forward shipments.",
+      "buttonText": "Book your Reverse Logistics Move \u2192",
+      "buttonLink": "/quote",
+      "youtubeUrl": "https://www.youtube.com/watch?v=HUozIpTODZQ"
+    },
+    "builtFor": {
+      "title": "Built for Reverse Flows",
+      "imageUrl": "/images/trust-section/trust-sec-image1.jpg",
+      "items": [
+        {
+          "title": "Rapid Recall Response",
+          "description": "Our team mobilizes carrier capacity quickly to support time-sensitive recall and returns logistics."
+        },
+        {
+          "title": "Asset Recovery Network",
+          "description": "Nationwide carrier access supports efficient recovery of equipment, inventory, and liquidation freight."
         }
       ],
       "buttonText": "Get a Quote",
