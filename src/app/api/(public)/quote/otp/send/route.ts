@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { handleApiError, BadRequestError } from '@/server/middlewares'
 import { rateLimit, getClientIp, RATE_LIMIT_PRESETS } from '@/server/utils/rate-limiter'
 import { createOtp } from '@/server/lib/otp-store'
-import { sendOtpEmail } from '@/server/services/email.service'
+import { sendOtpEmail, isEmailConfigured } from '@/server/services/email.service'
 
 const bodySchema = z.object({ email: z.string().email('Please enter a valid email address.') })
 
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const { code, cooldownRemaining } = createOtp(email)
     if (cooldownRemaining > 0) return NextResponse.json({ success: false, error: `Please wait ${cooldownRemaining} second${cooldownRemaining === 1 ? '' : 's'} before requesting a new code.`, cooldownRemaining }, { status: 429 })
     const isDev = process.env.NODE_ENV !== 'production'
-    const hasCredentials = !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
+    const hasCredentials = isEmailConfigured()
     if (hasCredentials) { await sendOtpEmail({ to: email, otp: code }) } else if (!isDev) { return NextResponse.json({ success: false, error: 'Email service is not configured.' }, { status: 500 }) }
     return NextResponse.json({ success: true, message: hasCredentials ? `Verification code sent to ${email}` : `[Dev] Email not sent (no SMTP credentials). Use the devCode below.`, ...(isDev && { devCode: code }) })
   } catch (err) { return handleApiError(err) }

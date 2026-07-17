@@ -3,6 +3,7 @@ import { validateRequest, handleApiError } from '@/server/middlewares'
 import { checkoutSchema } from '@/server/validations/stripe.validation'
 import { createCheckoutSession } from '@/server/services/stripe.service'
 import { createBooking } from '@/server/services/booking.service'
+import { sendOpsBookingAlert } from '@/server/services/email.service'
 import { rateLimit, getClientIp, RATE_LIMIT_PRESETS } from '@/server/utils/rate-limiter'
 
 export async function POST(request: NextRequest) {
@@ -15,6 +16,15 @@ export async function POST(request: NextRequest) {
     const data = validation.data!
     const { sessionId, sessionUrl } = await createCheckoutSession({ carrierName: data.carrierName, totalRate: data.totalRate, charges: data.charges, quoteId: data.quoteId, email: data.email, bookingId: 'pending' })
     const booking = await createBooking({ email: data.email, pickup: data.pickup, delivery: data.delivery, items: data.items, carrierName: data.carrierName, carrierCode: data.carrierCode, quoteId: data.quoteId, totalRate: data.totalRate, charges: data.charges, transitDays: data.transitDays, estimatedDeliveryDate: data.estimatedDeliveryDate, serviceType: data.serviceType, stripeSessionId: sessionId })
+    sendOpsBookingAlert({
+      bookingId: booking._id?.toString() ?? 'pending',
+      email: data.email,
+      carrierName: data.carrierName,
+      totalRate: data.totalRate,
+      pickup: data.pickup,
+      delivery: data.delivery,
+      totalWeight: data.items.reduce((sum: number, item: { weight: number }) => sum + item.weight, 0),
+    }).catch((err) => console.error('[Checkout] Ops booking alert failed (non-blocking):', err))
     return NextResponse.json({ success: true, data: { sessionUrl, sessionId, bookingId: booking._id?.toString() } }, { status: 200 })
   } catch (error) { return handleApiError(error) }
 }

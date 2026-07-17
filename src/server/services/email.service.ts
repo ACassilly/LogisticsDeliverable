@@ -1,13 +1,128 @@
 /**
  * Email Service
  *
- * Sends OTP verification emails via Gmail SMTP using an App Password.
- * Requires in .env.local:
+ * Preferred transport: Microsoft 365 via Microsoft Graph (app-only client
+ * credentials). Requires in .env.production:
+ *   M365_TENANT_ID=...
+ *   M365_CLIENT_ID=...
+ *   M365_CLIENT_SECRET=...
+ *   M365_SENDER=quotes@pes.supply           (mailbox to send as)
+ *   NOTIFY_EMAILS=a@x.com,b@y.com           (ops copies on bookings/leads)
+ *
+ * Fallback transport: Gmail SMTP with an App Password:
  *   GMAIL_USER=your-gmail@gmail.com
  *   GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
  */
 
 import { createTransport } from 'nodemailer'
+
+// ---------------------------------------------------------------------------
+// Transport selection
+// ---------------------------------------------------------------------------
+
+function hasM365(): boolean {
+  return !!(
+    process.env.M365_TENANT_ID &&
+    process.env.M365_CLIENT_ID &&
+    process.env.M365_CLIENT_SECRET &&
+    process.env.M365_SENDER
+  )
+}
+
+function hasGmail(): boolean {
+  return !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
+}
+
+/** True when at least one mail transport is fully configured. */
+export function isEmailConfigured(): boolean {
+  return hasM365() || hasGmail()
+}
+
+/** Ops recipients (comma-separated NOTIFY_EMAILS) for internal copies. */
+export function getNotifyRecipients(): string[] {
+  return (process.env.NOTIFY_EMAILS ?? '')
+    .split(',')
+    .map((e) => e.trim())
+    .filter(Boolean)
+}
+
+// ---------------------------------------------------------------------------
+// Microsoft Graph transport (app-only, client credentials)
+// ---------------------------------------------------------------------------
+
+let graphToken: { token: string; expiresAt: number } | null = null
+
+async function getGraphToken(): Promise<string> {
+  if (graphToken && Date.now() < graphToken.expiresAt - 60_000) return graphToken.token
+  const tenant = process.env.M365_TENANT_ID!
+  const res = await fetch(`https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: process.env.M365_CLIENT_ID!,
+      client_secret: process.env.M365_CLIENT_SECRET!,
+      scope: 'https://graph.microsoft.com/.default',
+      grant_type: 'client_credentials',
+    }),
+  })
+  if (!res.ok) throw new Error(`M365 token request failed: ${res.status} ${await res.text()}`)
+  const data = (await res.json()) as { access_token: string; expires_in: number }
+  graphToken = { token: data.access_token, expiresAt: Date.now() + data.expires_in * 1000 }
+  return graphToken.token
+}
+
+interface MailMessage {
+  to: string | string[]
+  bcc?: string[]
+  subject: string
+  html: string
+  text: string
+}
+
+function toRecipientList(addresses: string | string[] | undefined) {
+  if (!addresses) return []
+  const list = Array.isArray(addresses) ? addresses : [addresses]
+  return list.map((address) => ({ emailAddress: { address } }))
+}
+
+async function sendViaGraph(msg: MailMessage): Promise<void> {
+  const token = await getGraphToken()
+  const sender = process.env.M365_SENDER!
+  const res = await fetch(
+    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(sender)}/sendMail`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: {
+          subject: msg.subject,
+          body: { contentType: 'HTML', content: msg.html },
+          toRecipients: toRecipientList(msg.to),
+          ...(msg.bcc?.length ? { bccRecipients: toRecipientList(msg.bcc) } : {}),
+        },
+        saveToSentItems: true,
+      }),
+    }
+  )
+  if (!res.ok) throw new Error(`Graph sendMail failed: ${res.status} ${await res.text()}`)
+}
+
+/** Send through M365 Graph when configured, otherwise Gmail SMTP. */
+async function dispatchMail(msg: MailMessage): Promise<void> {
+  if (hasM365()) {
+    await sendViaGraph(msg)
+    return
+  }
+  const transport = getTransporter()
+  await transport.sendMail({
+    from: process.env.GMAIL_FROM ?? `Portlandia Logistics <${process.env.GMAIL_USER}>`,
+    to: msg.to,
+    ...(msg.bcc?.length ? { bcc: msg.bcc } : {}),
+    subject: msg.subject,
+    html: msg.html,
+    text: msg.text,
+  })
+}
 
 // ---------------------------------------------------------------------------
 // Transporter (lazy singleton — created on first use)
@@ -24,7 +139,7 @@ function getTransporter() {
 
     if (!user || !pass) {
       throw new Error(
-        'Email service is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local'
+        'Email service is not configured. Set M365_* (preferred) or GMAIL_USER and GMAIL_APP_PASSWORD.'
       )
     }
 
@@ -153,10 +268,7 @@ function buildOtpEmailHtml(otp: string): string {
 // ---------------------------------------------------------------------------
 
 export async function sendOtpEmail({ to, otp }: { to: string; otp: string }): Promise<void> {
-  const transport = getTransporter()
-
-  await transport.sendMail({
-    from: process.env.GMAIL_FROM ?? `Portlandia Logistics <${process.env.GMAIL_USER}>`,
+  await dispatchMail({
     to,
     subject: `${otp} is your Portlandia Logistics verification code`,
     html: buildOtpEmailHtml(otp),
@@ -432,13 +544,11 @@ function buildBookingConfirmationHtml(data: BookingEmailData): string {
 }
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData): Promise<void> {
-  const transport = getTransporter()
-
   const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0)
 
-  await transport.sendMail({
-    from: process.env.GMAIL_FROM ?? `Portlandia Logistics <${process.env.GMAIL_USER}>`,
+  await dispatchMail({
     to: data.email,
+    bcc: getNotifyRecipients(),
     subject: `Booking Confirmed — ${data.pickup.city}, ${data.pickup.state} → ${data.delivery.city}, ${data.delivery.state} | ${totalWeight} lbs`,
     html: buildBookingConfirmationHtml(data),
     text: [
@@ -454,5 +564,45 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData): Prom
       `Thank you for choosing Portlandia Logistics!`,
       `Need help? Call +1 479-450-7010`,
     ].filter(Boolean).join('\n'),
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Ops alert — new booking initiated (pre-payment lead)
+// ---------------------------------------------------------------------------
+
+export interface OpsBookingAlertData {
+  bookingId: string
+  email: string
+  carrierName: string
+  totalRate: number
+  pickup: { city: string; state: string; zip: string; pickupDate: string }
+  delivery: { city: string; state: string; zip: string }
+  totalWeight: number
+}
+
+export async function sendOpsBookingAlert(data: OpsBookingAlertData): Promise<void> {
+  const recipients = getNotifyRecipients()
+  if (!recipients.length || !isEmailConfigured()) return
+
+  const route = `${data.pickup.city}, ${data.pickup.state} ${data.pickup.zip} → ${data.delivery.city}, ${data.delivery.state} ${data.delivery.zip}`
+  const lines = [
+    `New instant-quote booking started on portlandialogistics.com`,
+    ``,
+    `Booking: ${data.bookingId}`,
+    `Customer: ${data.email}`,
+    `Route: ${route}`,
+    `Pickup date: ${data.pickup.pickupDate}`,
+    `Carrier: ${data.carrierName}`,
+    `Weight: ${data.totalWeight} lbs`,
+    `Total: $${formatCurrency(data.totalRate)}`,
+    ``,
+    `Customer has been sent to Stripe checkout; payment may still be pending.`,
+  ]
+  await dispatchMail({
+    to: recipients,
+    subject: `Lead: ${route} — $${formatCurrency(data.totalRate)} (${data.carrierName})`,
+    html: `<pre style="font-family:'Segoe UI',Arial,sans-serif;font-size:14px;line-height:1.6;">${lines.join('\n')}</pre>`,
+    text: lines.join('\n'),
   })
 }

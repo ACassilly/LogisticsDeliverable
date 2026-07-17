@@ -12,6 +12,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Sync managed env block to VM
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_KEY_B64: ${{ secrets.SSH_KEY_B64 }}
+          ENV_PRODUCTION_MANAGED: ${{ secrets.ENV_PRODUCTION_MANAGED }}
+        run: |
+          if [ -z "$ENV_PRODUCTION_MANAGED" ]; then
+            echo "ENV_PRODUCTION_MANAGED secret not set; skipping env sync."
+            exit 0
+          fi
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY_B64" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf '%s\n' "$ENV_PRODUCTION_MANAGED" > /tmp/managed.env
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no /tmp/managed.env "$SSH_USERNAME@$SSH_HOST:/tmp/managed.env"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$SSH_USERNAME@$SSH_HOST" << 'ENVSYNC'
+          set -e
+          cd /opt/LogisticsDeliverable
+          touch .env.production
+          awk 'BEGIN{skip=0} /^# >>> riven-managed >>>$/{skip=1;next} /^# <<< riven-managed <<<$/{skip=0;next} skip==0{print}' .env.production > /tmp/env.base
+          { cat /tmp/env.base; echo "# >>> riven-managed >>>"; cat /tmp/managed.env; echo "# <<< riven-managed <<<"; } > .env.production
+          rm -f /tmp/env.base /tmp/managed.env
+          echo "Managed env block synced into .env.production"
+          ENVSYNC
+
       - name: Deploy to Azure VM via SSH
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
