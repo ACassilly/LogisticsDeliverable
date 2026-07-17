@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getServiceData } from '@/constants/services';
 import { SERVICE_SLUGS } from '@/constants/services';
@@ -9,6 +10,27 @@ import { ServiceBuiltFor } from '@/components/landing/services/service-built-for
 
 export function generateStaticParams() {
   return SERVICE_SLUGS.map((service) => ({ service }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ service: string }>;
+}): Promise<Metadata> {
+  const { service } = await params;
+  const serviceData = getServiceData(service);
+
+  if (!serviceData) {
+    return {
+      title: 'Service Not Found | Portlandia Logistics',
+      description: 'The requested service page could not be found.',
+    };
+  }
+
+  return {
+    title: `${serviceData.title} | Portlandia Logistics`,
+    description: serviceData.shortDescription,
+  };
 }
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ service: string }> }) {

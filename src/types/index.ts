@@ -133,7 +133,17 @@ export interface PaginatedResponse<T> {
 /**
  * Service types
  */
-export type ServiceType = 'ltl' | 'ftl' | 'intermodal' | 'drayage';
+export type ServiceType =
+  | 'ltl'
+  | 'ftl'
+  | 'intermodal'
+  | 'drayage'
+  | 'specialized'
+  | 'expedited'
+  | 'warehousing'
+  | 'final-mile'
+  | 'agency'
+  | 'reverse';
 
 export interface Button {
   text: string;

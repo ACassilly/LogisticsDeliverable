@@ -3,7 +3,18 @@ import type { ServiceData, ServiceType } from '@/types';
 
 export const SERVICES_DATA = servicesDataJson as Record<ServiceType, ServiceData>;
 
-export const SERVICE_SLUGS: ServiceType[] = ['ltl', 'ftl', 'intermodal', 'drayage'];
+export const SERVICE_SLUGS: ServiceType[] = [
+  'ltl',
+  'ftl',
+  'intermodal',
+  'drayage',
+  'specialized',
+  'expedited',
+  'warehousing',
+  'final-mile',
+  'agency',
+  'reverse',
+];
 
 export function getServiceData(slug: string): ServiceData | null {
   if (SERVICE_SLUGS.includes(slug as ServiceType)) {
