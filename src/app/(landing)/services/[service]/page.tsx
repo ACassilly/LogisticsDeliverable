@@ -7,9 +7,6 @@ import { ServiceWhatIs } from '@/components/landing/services/service-what-is';
 import { ServiceBook } from '@/components/landing/services/service-book';
 import { ServiceBuiltFor } from '@/components/landing/services/service-built-for';
 
-export const dynamic = 'force-dynamic';
-export const dynamicParams = true;
-
 export function generateStaticParams() {
   return SERVICE_SLUGS.map((service) => ({ service }));
 }
