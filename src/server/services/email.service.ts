@@ -1,146 +1,202 @@
 /**
- * Email Service
+ * Email service — Portlandia Logistics
  *
- * Sends OTP verification emails via Gmail SMTP using an App Password.
- * Requires in .env.local:
- *   GMAIL_USER=your-gmail@gmail.com
- *   GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
+ * Uses Microsoft Graph app-only sendMail when GRAPH_MAIL_* env vars are set.
+ * Falls back to nodemailer/Gmail SMTP when only GMAIL_* are set (dev).
+ *
+ * Required env for Graph path:
+ *   GRAPH_MAIL_TENANT_ID
+ *   GRAPH_MAIL_CLIENT_ID
+ *   GRAPH_MAIL_CLIENT_SECRET
+ *   GRAPH_MAIL_SENDER            e.g. operations@portlandiaelectric.supply
+ *   GMAIL_FROM                   friendly from header (optional)
+ *
+ * Required env for legacy SMTP path:
+ *   GMAIL_USER
+ *   GMAIL_APP_PASSWORD
+ *   GMAIL_FROM                   (optional)
  */
 
-import { createTransport } from 'nodemailer'
+import nodemailer from 'nodemailer'
+import type { Transporter } from 'nodemailer'
 
-// ---------------------------------------------------------------------------
-// Transporter (lazy singleton — created on first use)
-// ---------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Graph app-only token cache
+// -----------------------------------------------------------------------------
 
-let transporter: ReturnType<typeof createTransport> | null = null
+interface CachedToken {
+  token: string
+  expiresAt: number
+}
 
-function getTransporter() {
-  if (!transporter) {
-    const user = process.env.GMAIL_USER
-    const pass = process.env.GMAIL_APP_PASSWORD
-    const host = process.env.GMAIL_HOST ?? 'smtp.gmail.com'
-    const port = Number(process.env.GMAIL_PORT ?? 587)
+let cachedToken: CachedToken | null = null
 
-    if (!user || !pass) {
-      throw new Error(
-        'Email service is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local'
-      )
-    }
+async function getGraphToken(): Promise<string> {
+  const tenantId = process.env.GRAPH_MAIL_TENANT_ID
+  const clientId = process.env.GRAPH_MAIL_CLIENT_ID
+  const clientSecret = process.env.GRAPH_MAIL_CLIENT_SECRET
 
-    transporter = createTransport({
-      host,
-      port,
-      // port 465 = implicit TLS (secure:true), port 587 = STARTTLS (secure:false)
-      secure: port === 465,
-      auth: { user, pass },
-      tls: {
-        // Accept self-signed certs in development; in production Gmail certs are always valid
-        rejectUnauthorized: process.env.NODE_ENV === 'production',
-      },
-    })
+  if (!tenantId || !clientId || !clientSecret) {
+    throw new Error(
+      'Graph mail is not configured. Set GRAPH_MAIL_TENANT_ID, GRAPH_MAIL_CLIENT_ID, GRAPH_MAIL_CLIENT_SECRET.'
+    )
   }
+
+  // Reuse cached token if it has more than 5 min of life left
+  if (cachedToken && cachedToken.expiresAt > Date.now() + 5 * 60 * 1000) {
+    return cachedToken.token
+  }
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: 'client_credentials',
+    scope: 'https://graph.microsoft.com/.default',
+  })
+
+  const res = await fetch(
+    `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
+    { method: 'POST', body: params }
+  )
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`[Graph] token endpoint returned ${res.status}: ${text.slice(0, 300)}`)
+  }
+
+  const json = (await res.json()) as { access_token: string; expires_in: number }
+  if (!json.access_token) {
+    throw new Error('[Graph] token response missing access_token')
+  }
+
+  cachedToken = {
+    token: json.access_token,
+    expiresAt: Date.now() + (json.expires_in ?? 3600) * 1000,
+  }
+  return cachedToken.token
+}
+
+interface GraphSendMailArgs {
+  to: string | string[]
+  subject: string
+  html?: string
+  text?: string
+  fromName?: string
+}
+
+async function graphSendMail({ to, subject, html, text, fromName }: GraphSendMailArgs): Promise<void> {
+  const sender = process.env.GRAPH_MAIL_SENDER
+  if (!sender) {
+    throw new Error('GRAPH_MAIL_SENDER env var is required to send via Graph.')
+  }
+
+  const token = await getGraphToken()
+  const toList = Array.isArray(to) ? to : [to]
+
+  const body = {
+    message: {
+      subject,
+      body: html
+        ? { contentType: 'HTML', content: html }
+        : { contentType: 'Text', content: text ?? '' },
+      toRecipients: toList.map((addr) => ({ emailAddress: { address: addr } })),
+      ...(fromName
+        ? { from: { emailAddress: { address: sender, name: fromName } } }
+        : {}),
+    },
+    saveToSentItems: true,
+  }
+
+  const res = await fetch(
+    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(sender)}/sendMail`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    }
+  )
+
+  if (res.status !== 202) {
+    const bodyText = await res.text().catch(() => '')
+    throw new Error(`[Graph] sendMail returned ${res.status}: ${bodyText.slice(0, 400)}`)
+  }
+}
+
+function useGraph(): boolean {
+  return !!(
+    process.env.GRAPH_MAIL_TENANT_ID &&
+    process.env.GRAPH_MAIL_CLIENT_ID &&
+    process.env.GRAPH_MAIL_CLIENT_SECRET &&
+    process.env.GRAPH_MAIL_SENDER
+  )
+}
+
+// -----------------------------------------------------------------------------
+// Legacy SMTP transporter (used only if GRAPH_MAIL_* is not configured)
+// -----------------------------------------------------------------------------
+
+let transporter: Transporter | null = null
+
+function getTransporter(): Transporter {
+  if (transporter) return transporter
+
+  const user = process.env.GMAIL_USER
+  const pass = process.env.GMAIL_APP_PASSWORD
+  if (!user || !pass) {
+    throw new Error(
+      'Email service is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local'
+    )
+  }
+
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user, pass },
+  })
   return transporter
 }
 
-// ---------------------------------------------------------------------------
-// HTML Template
-// ---------------------------------------------------------------------------
+function friendlyFrom(): string {
+  return (
+    process.env.GMAIL_FROM ??
+    `Portlandia Logistics <${process.env.GRAPH_MAIL_SENDER ?? process.env.GMAIL_USER ?? 'noreply@portlandialogistics.com'}>`
+  )
+}
 
-function buildOtpEmailHtml(otp: string): string {
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Verification Code – Portlandia Logistics</title>
-</head>
-<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:'Segoe UI',Arial,sans-serif;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8;">
+// -----------------------------------------------------------------------------
+// Public API
+// -----------------------------------------------------------------------------
+
+function buildOtpHtml(otp: string): string {
+  return `<!doctype html>
+<html>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f6;padding:24px;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
     <tr>
-      <td align="center" style="padding:40px 16px;">
-
-        <!-- Card -->
-        <table role="presentation" width="600" cellspacing="0" cellpadding="0"
-               style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-
-          <!-- Header -->
-          <tr>
-            <td style="background:linear-gradient(135deg,#1a7a45 0%,#3BAB6B 100%);padding:36px 40px;text-align:center;">
-              <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;letter-spacing:-0.5px;">
-                Portlandia Logistics
-              </h1>
-              <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">
-                Freight &amp; Shipping Solutions
-              </p>
-            </td>
-          </tr>
-
-          <!-- Body -->
-          <tr>
-            <td style="padding:40px 40px 32px;">
-              <h2 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#1a1a1a;">
-                Verify Your Email
-              </h2>
-              <p style="margin:0 0 24px;font-size:15px;color:#444444;line-height:1.6;">
-                Use the 6-digit code below to complete your freight booking.
-                This code is valid for <strong>10 minutes</strong>.
-              </p>
-
-              <!-- OTP Box -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="padding:28px 0;">
-                    <div style="display:inline-block;background:#f0faf4;border:2px dashed #3BAB6B;border-radius:12px;padding:20px 40px;">
-                      <p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#3BAB6B;text-transform:uppercase;letter-spacing:1.5px;">
-                        Verification Code
-                      </p>
-                      <p style="margin:0;font-size:42px;font-weight:800;color:#1a7a45;letter-spacing:8px;font-family:'Courier New',monospace;">
-                        ${otp}
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-
-              <p style="margin:0 0 24px;font-size:14px;color:#666666;line-height:1.6;">
-                If you did not request this code, you can safely ignore this email.
-                Someone may have entered your email address by mistake.
-              </p>
-
-              <!-- Divider -->
-              <hr style="border:none;border-top:1px solid #e8e8e8;margin:0 0 24px;" />
-
-              <!-- Warning -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="background:#fff8e1;border-left:4px solid #f59e0b;border-radius:6px;padding:14px 16px;">
-                    <p style="margin:0;font-size:13px;color:#7c5a00;line-height:1.5;">
-                      <strong>Security reminder:</strong> Portlandia Logistics will never ask you
-                      to share this code over the phone or via email. Keep it private.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background:#f8f9fa;padding:24px 40px;text-align:center;border-top:1px solid #e8e8e8;">
-              <p style="margin:0 0 8px;font-size:13px;color:#888888;">
-                © ${new Date().getFullYear()} Portlandia Logistics · All rights reserved
-              </p>
-              <p style="margin:0;font-size:12px;color:#aaaaaa;">
-                Need help? Call us at
-                <a href="tel:+14794507010" style="color:#3BAB6B;text-decoration:none;">+1 479-450-7010</a>
-              </p>
-            </td>
-          </tr>
-
-        </table>
-        <!-- /Card -->
-
+      <td style="padding:32px 40px 16px;text-align:center;">
+        <h1 style="margin:0;color:#111;font-size:22px;">Verify your email</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:8px 40px 24px;text-align:center;color:#444;font-size:15px;line-height:1.5;">
+        Enter this six-digit code to finish your Portlandia Logistics quote:
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 40px 32px;text-align:center;">
+        <div style="display:inline-block;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:32px;letter-spacing:0.35em;padding:16px 24px;background:#f0f6ff;color:#0b3d91;border-radius:8px;font-weight:600;">${otp}</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 40px 24px;text-align:center;color:#888;font-size:13px;line-height:1.5;">
+        This code expires in 10 minutes. If you didn't request it, you can ignore this message.
+      </td>
+    </tr>
+    <tr>
+      <td style="background:#f8f9fa;padding:20px 40px;text-align:center;border-top:1px solid #e8e8e8;">
+        <p style="margin:0;font-size:12px;color:#aaa;">© ${new Date().getFullYear()} Portlandia Logistics</p>
       </td>
     </tr>
   </table>
@@ -148,282 +204,122 @@ function buildOtpEmailHtml(otp: string): string {
 </html>`
 }
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
-
 export async function sendOtpEmail({ to, otp }: { to: string; otp: string }): Promise<void> {
-  const transport = getTransporter()
+  const subject = `Your Portlandia Logistics verification code: ${otp}`
+  const html = buildOtpHtml(otp)
+  const text = `Your Portlandia Logistics verification code is: ${otp}\n\nThis code expires in 10 minutes.`
 
-  await transport.sendMail({
-    from: process.env.GMAIL_FROM ?? `Portlandia Logistics <${process.env.GMAIL_USER}>`,
+  if (useGraph()) {
+    await graphSendMail({ to, subject, html, text, fromName: 'Portlandia Logistics' })
+    return
+  }
+
+  await getTransporter().sendMail({
+    from: friendlyFrom(),
     to,
-    subject: `${otp} is your Portlandia Logistics verification code`,
-    html: buildOtpEmailHtml(otp),
-    text: `Your Portlandia Logistics verification code is: ${otp}\n\nThis code expires in 10 minutes. Do not share it with anyone.`,
+    subject,
+    html,
+    text,
   })
 }
 
-// ---------------------------------------------------------------------------
-// Booking Confirmation Email
-// ---------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Booking confirmation
+// -----------------------------------------------------------------------------
 
-export interface BookingEmailData {
+interface BookingEmailData {
   email: string
   bookingId: string
   carrierName: string
   totalRate: number
-  transitDays?: string
+  transitDays?: string | number
   estimatedDeliveryDate?: string
   serviceType?: string
-  pickup: {
-    city: string
-    state: string
-    zip: string
-    pickupDate: string
-  }
-  delivery: {
-    city: string
-    state: string
-    zip: string
-  }
-  items: {
-    description: string
-    weight: number
-    productClass: number
-    pieceCount: number
-  }[]
-  charges: { name: string; amount: number }[]
+  pickup: { city: string; state: string; zip: string; pickupDate: string }
+  delivery: { city: string; state: string; zip: string }
+  items: Array<{ description: string; weight: number; productClass: number | string; pieceCount: number }>
+  charges: Array<{ name: string; amount: number }>
 }
 
-function formatCurrency(amount: number): string {
-  return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
-
-function formatEmailDate(dateStr: string): string {
-  if (!dateStr || dateStr === '0001-01-01T00:00:00') return '—'
-  try {
-    const date = new Date(dateStr)
-    if (isNaN(date.getTime())) return dateStr
-    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
-  } catch {
-    return dateStr
-  }
+function formatCurrency(n: number): string {
+  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 function buildBookingConfirmationHtml(data: BookingEmailData): string {
+  const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0)
+  const rows = data.items
+    .map(
+      (item) => `
+        <tr>
+          <td style="padding:8px 12px;border-bottom:1px solid #eee;">${item.pieceCount} × ${item.description}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">${item.weight} lbs</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">Class ${item.productClass}</td>
+        </tr>`
+    )
+    .join('')
+
   const chargeRows = data.charges
-    .filter((c) => c.amount > 0)
     .map(
       (c) => `
         <tr>
-          <td style="padding:8px 12px;font-size:14px;color:#444444;border-bottom:1px solid #f0f0f0;">${c.name}</td>
-          <td style="padding:8px 12px;font-size:14px;color:#1a1a1a;text-align:right;border-bottom:1px solid #f0f0f0;font-weight:500;">$${formatCurrency(c.amount)}</td>
+          <td style="padding:6px 12px;color:#555;">${c.name}</td>
+          <td style="padding:6px 12px;text-align:right;color:#555;">$${formatCurrency(c.amount)}</td>
         </tr>`
     )
     .join('')
 
-  const itemRows = data.items
-    .map(
-      (item, i) => `
-        <tr>
-          <td style="padding:8px 12px;font-size:14px;color:#444444;border-bottom:1px solid #f0f0f0;">${i + 1}. ${item.description}</td>
-          <td style="padding:8px 12px;font-size:14px;color:#444444;text-align:right;border-bottom:1px solid #f0f0f0;">${item.weight} lbs</td>
-          <td style="padding:8px 12px;font-size:14px;color:#444444;text-align:right;border-bottom:1px solid #f0f0f0;">Class ${item.productClass}</td>
-          <td style="padding:8px 12px;font-size:14px;color:#444444;text-align:right;border-bottom:1px solid #f0f0f0;">${item.pieceCount} pc(s)</td>
-        </tr>`
-    )
-    .join('')
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Booking Confirmed – Portlandia Logistics</title>
-</head>
-<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:'Segoe UI',Arial,sans-serif;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f6f8;">
+  return `<!doctype html>
+<html>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f4f6;padding:24px;margin:0;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
     <tr>
-      <td align="center" style="padding:40px 16px;">
-
-        <!-- Card -->
-        <table role="presentation" width="600" cellspacing="0" cellpadding="0"
-               style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-
-          <!-- Header -->
+      <td style="background:#0b3d91;padding:24px 40px;color:#fff;">
+        <h1 style="margin:0;font-size:22px;">Booking confirmed</h1>
+        <p style="margin:6px 0 0;font-size:14px;color:#c7d6ff;">Reference #${data.bookingId}</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:24px 40px;">
+        <p style="margin:0 0 16px;font-size:15px;color:#333;">Thanks for booking with Portlandia Logistics. Here are the details:</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
           <tr>
-            <td style="background:linear-gradient(135deg,#1a7a45 0%,#3BAB6B 100%);padding:36px 40px;text-align:center;">
-              <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;letter-spacing:-0.5px;">
-                Portlandia Logistics
-              </h1>
-              <p style="margin:8px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">
-                Freight &amp; Shipping Solutions
-              </p>
-            </td>
+            <td style="padding:8px 0;font-size:14px;color:#666;">Route</td>
+            <td style="padding:8px 0;font-size:14px;text-align:right;">${data.pickup.city}, ${data.pickup.state} ${data.pickup.zip} → ${data.delivery.city}, ${data.delivery.state} ${data.delivery.zip}</td>
           </tr>
-
-          <!-- Success Banner -->
           <tr>
-            <td style="padding:32px 40px 0;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="padding:24px 0;">
-                    <div style="display:inline-block;width:64px;height:64px;border-radius:50%;background:#f0faf4;text-align:center;line-height:64px;font-size:32px;">
-                      &#10003;
-                    </div>
-                    <h2 style="margin:16px 0 4px;font-size:24px;font-weight:700;color:#1a7a45;">
-                      Booking Confirmed!
-                    </h2>
-                    <p style="margin:0;font-size:14px;color:#666666;">
-                      Your freight shipment has been booked successfully.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
+            <td style="padding:8px 0;font-size:14px;color:#666;">Pickup date</td>
+            <td style="padding:8px 0;font-size:14px;text-align:right;">${data.pickup.pickupDate}</td>
           </tr>
-
-          <!-- Booking Reference -->
+          ${data.transitDays ? `<tr><td style="padding:8px 0;font-size:14px;color:#666;">Transit</td><td style="padding:8px 0;font-size:14px;text-align:right;">${data.transitDays} business days</td></tr>` : ''}
           <tr>
-            <td style="padding:0 40px;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="padding:16px 0;">
-                    <div style="display:inline-block;background:#f0faf4;border:2px dashed #3BAB6B;border-radius:12px;padding:14px 32px;">
-                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#3BAB6B;text-transform:uppercase;letter-spacing:1.5px;">
-                        Booking Reference
-                      </p>
-                      <p style="margin:0;font-size:18px;font-weight:700;color:#1a7a45;font-family:'Courier New',monospace;letter-spacing:1px;">
-                        ${data.bookingId}
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
+            <td style="padding:8px 0;font-size:14px;color:#666;">Carrier</td>
+            <td style="padding:8px 0;font-size:14px;text-align:right;">${data.carrierName}</td>
           </tr>
-
-          <!-- Route Summary -->
-          <tr>
-            <td style="padding:24px 40px 0;">
-              <h3 style="margin:0 0 16px;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:0.5px;">
-                Route Summary
-              </h3>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;">
-                <tr>
-                  <td style="padding:16px 20px;background:#f9fafb;border-bottom:1px solid #e8e8e8;">
-                    <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#3BAB6B;text-transform:uppercase;letter-spacing:1px;">From (Pickup)</p>
-                    <p style="margin:0;font-size:15px;color:#1a1a1a;font-weight:500;">${data.pickup.city}, ${data.pickup.state} ${data.pickup.zip}</p>
-                    <p style="margin:4px 0 0;font-size:13px;color:#666666;">Pickup: ${formatEmailDate(data.pickup.pickupDate)}</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:16px 20px;background:#ffffff;">
-                    <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#3BAB6B;text-transform:uppercase;letter-spacing:1px;">To (Delivery)</p>
-                    <p style="margin:0;font-size:15px;color:#1a1a1a;font-weight:500;">${data.delivery.city}, ${data.delivery.state} ${data.delivery.zip}</p>
-                    ${data.estimatedDeliveryDate ? `<p style="margin:4px 0 0;font-size:13px;color:#666666;">Est. Delivery: ${formatEmailDate(data.estimatedDeliveryDate)}</p>` : ''}
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Carrier Details -->
-          <tr>
-            <td style="padding:24px 40px 0;">
-              <h3 style="margin:0 0 16px;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:0.5px;">
-                Carrier &amp; Service
-              </h3>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;">
-                <tr>
-                  <td style="padding:12px 20px;border-bottom:1px solid #f0f0f0;">
-                    <span style="font-size:13px;color:#666666;">Carrier</span><br/>
-                    <span style="font-size:15px;font-weight:500;color:#1a1a1a;">${data.carrierName}</span>
-                  </td>
-                </tr>
-                ${data.serviceType ? `<tr>
-                  <td style="padding:12px 20px;border-bottom:1px solid #f0f0f0;">
-                    <span style="font-size:13px;color:#666666;">Service Type</span><br/>
-                    <span style="font-size:15px;font-weight:500;color:#1a1a1a;">${data.serviceType}</span>
-                  </td>
-                </tr>` : ''}
-                ${data.transitDays ? `<tr>
-                  <td style="padding:12px 20px;">
-                    <span style="font-size:13px;color:#666666;">Transit Time</span><br/>
-                    <span style="font-size:15px;font-weight:500;color:#1a1a1a;">${data.transitDays} business days</span>
-                  </td>
-                </tr>` : ''}
-              </table>
-            </td>
-          </tr>
-
-          <!-- Items -->
-          <tr>
-            <td style="padding:24px 40px 0;">
-              <h3 style="margin:0 0 16px;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:0.5px;">
-                Shipment Items
-              </h3>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;">
-                <tr style="background:#f9fafb;">
-                  <th style="padding:10px 12px;font-size:12px;color:#666666;text-align:left;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Item</th>
-                  <th style="padding:10px 12px;font-size:12px;color:#666666;text-align:right;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Weight</th>
-                  <th style="padding:10px 12px;font-size:12px;color:#666666;text-align:right;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Class</th>
-                  <th style="padding:10px 12px;font-size:12px;color:#666666;text-align:right;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Qty</th>
-                </tr>
-                ${itemRows}
-              </table>
-            </td>
-          </tr>
-
-          <!-- Charges & Total -->
-          <tr>
-            <td style="padding:24px 40px 0;">
-              <h3 style="margin:0 0 16px;font-size:16px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:0.5px;">
-                Payment Summary
-              </h3>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;">
-                ${chargeRows}
-                <tr style="background:#f0faf4;">
-                  <td style="padding:12px 12px;font-size:16px;color:#1a7a45;font-weight:700;">Total Paid</td>
-                  <td style="padding:12px 12px;font-size:16px;color:#1a7a45;text-align:right;font-weight:700;">$${formatCurrency(data.totalRate)}</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- What's Next -->
-          <tr>
-            <td style="padding:28px 40px 0;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td style="background:#f0faf4;border-left:4px solid #3BAB6B;border-radius:6px;padding:16px 18px;">
-                    <p style="margin:0 0 6px;font-size:14px;font-weight:600;color:#1a7a45;">What&rsquo;s Next?</p>
-                    <p style="margin:0;font-size:13px;color:#444444;line-height:1.6;">
-                      Our team will coordinate pickup with the carrier. You&rsquo;ll receive tracking updates as your shipment progresses. Keep your booking reference handy for any inquiries.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background:#f8f9fa;padding:24px 40px;text-align:center;border-top:1px solid #e8e8e8;margin-top:32px;">
-              <p style="margin:0 0 8px;font-size:13px;color:#888888;">
-                &copy; ${new Date().getFullYear()} Portlandia Logistics &middot; All rights reserved
-              </p>
-              <p style="margin:0;font-size:12px;color:#aaaaaa;">
-                Need help? Call us at
-                <a href="tel:+14794507010" style="color:#3BAB6B;text-decoration:none;">+1 479-450-7010</a>
-              </p>
-            </td>
-          </tr>
-
         </table>
-        <!-- /Card -->
 
+        <h3 style="margin:24px 0 8px;font-size:15px;color:#111;">Freight</h3>
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-top:1px solid #eee;">
+          ${rows}
+          <tr>
+            <td style="padding:10px 12px;font-weight:600;">Total weight</td>
+            <td style="padding:10px 12px;text-align:right;font-weight:600;" colspan="2">${totalWeight} lbs</td>
+          </tr>
+        </table>
+
+        <h3 style="margin:24px 0 8px;font-size:15px;color:#111;">Charges</h3>
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          ${chargeRows}
+          <tr>
+            <td style="padding:10px 12px;border-top:1px solid #eee;font-weight:600;font-size:16px;">Total</td>
+            <td style="padding:10px 12px;border-top:1px solid #eee;text-align:right;font-weight:600;font-size:16px;">$${formatCurrency(data.totalRate)}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="background:#f8f9fa;padding:20px 40px;text-align:center;border-top:1px solid #e8e8e8;">
+        <p style="margin:0 0 6px;font-size:13px;color:#888;">© ${new Date().getFullYear()} Portlandia Logistics</p>
+        <p style="margin:0;font-size:12px;color:#aaa;">Need help? Call <a href="tel:+14794507010" style="color:#3BAB6B;text-decoration:none;">+1 479-450-7010</a></p>
       </td>
     </tr>
   </table>
@@ -432,27 +328,35 @@ function buildBookingConfirmationHtml(data: BookingEmailData): string {
 }
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData): Promise<void> {
-  const transport = getTransporter()
-
   const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0)
+  const subject = `Booking Confirmed — ${data.pickup.city}, ${data.pickup.state} → ${data.delivery.city}, ${data.delivery.state} | ${totalWeight} lbs`
+  const html = buildBookingConfirmationHtml(data)
+  const text = [
+    `Booking Confirmed!`,
+    ``,
+    `Reference: ${data.bookingId}`,
+    `Route: ${data.pickup.city}, ${data.pickup.state} ${data.pickup.zip} → ${data.delivery.city}, ${data.delivery.state} ${data.delivery.zip}`,
+    `Carrier: ${data.carrierName}`,
+    `Total: $${formatCurrency(data.totalRate)}`,
+    `Pickup Date: ${data.pickup.pickupDate}`,
+    data.transitDays ? `Transit: ${data.transitDays} business days` : '',
+    ``,
+    `Thank you for choosing Portlandia Logistics!`,
+    `Need help? Call +1 479-450-7010`,
+  ]
+    .filter(Boolean)
+    .join('\n')
 
-  await transport.sendMail({
-    from: process.env.GMAIL_FROM ?? `Portlandia Logistics <${process.env.GMAIL_USER}>`,
+  if (useGraph()) {
+    await graphSendMail({ to: data.email, subject, html, text, fromName: 'Portlandia Logistics' })
+    return
+  }
+
+  await getTransporter().sendMail({
+    from: friendlyFrom(),
     to: data.email,
-    subject: `Booking Confirmed — ${data.pickup.city}, ${data.pickup.state} → ${data.delivery.city}, ${data.delivery.state} | ${totalWeight} lbs`,
-    html: buildBookingConfirmationHtml(data),
-    text: [
-      `Booking Confirmed!`,
-      ``,
-      `Reference: ${data.bookingId}`,
-      `Route: ${data.pickup.city}, ${data.pickup.state} ${data.pickup.zip} → ${data.delivery.city}, ${data.delivery.state} ${data.delivery.zip}`,
-      `Carrier: ${data.carrierName}`,
-      `Total: $${formatCurrency(data.totalRate)}`,
-      `Pickup Date: ${data.pickup.pickupDate}`,
-      data.transitDays ? `Transit: ${data.transitDays} business days` : '',
-      ``,
-      `Thank you for choosing Portlandia Logistics!`,
-      `Need help? Call +1 479-450-7010`,
-    ].filter(Boolean).join('\n'),
+    subject,
+    html,
+    text,
   })
 }

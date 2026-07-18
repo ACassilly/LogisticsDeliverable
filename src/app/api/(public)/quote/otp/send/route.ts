@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const { code, cooldownRemaining } = createOtp(email)
     if (cooldownRemaining > 0) return NextResponse.json({ success: false, error: `Please wait ${cooldownRemaining} second${cooldownRemaining === 1 ? '' : 's'} before requesting a new code.`, cooldownRemaining }, { status: 429 })
     const isDev = process.env.NODE_ENV !== 'production'
-    const hasCredentials = !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
+    const hasCredentials = !!((process.env.GRAPH_MAIL_TENANT_ID && process.env.GRAPH_MAIL_CLIENT_ID && process.env.GRAPH_MAIL_CLIENT_SECRET && process.env.GRAPH_MAIL_SENDER) || (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD))
     if (hasCredentials) { await sendOtpEmail({ to: email, otp: code }) } else if (!isDev) { return NextResponse.json({ success: false, error: 'Email service is not configured.' }, { status: 500 }) }
     return NextResponse.json({ success: true, message: hasCredentials ? `Verification code sent to ${email}` : `[Dev] Email not sent (no SMTP credentials). Use the devCode below.`, ...(isDev && { devCode: code }) })
   } catch (err) { return handleApiError(err) }
