@@ -113,7 +113,7 @@ export const quoteRateRequestSchema = z.object({
     ),
   stackable: z.boolean().default(false),
   terminalPickup: z.boolean().default(false),
-  shipmentNew: z.boolean().default(false),
+  shipmentNew: z.boolean().default(true),
   contactName: z.string().optional(),
   email: z
     .string()
