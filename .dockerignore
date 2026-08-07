@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+*.md
+.env*
+!.env.local.example
+Dockerfile
+.dockerignore
+docker-compose*.yml
+vercel.json
+.github
+.claude
+.vscode
+.continue
+.devcontainer

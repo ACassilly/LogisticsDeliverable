@@ -28,6 +28,11 @@ export function PaymentStep({
   onPay,
   onSubmitBooking,
 }: PaymentStepProps) {
+  // ── Booking gate (client-side) ──────────────────────────────────
+  // Mirrors the server-side CARRIER_BOOKING_ENABLED gate.
+  // The public env var is set at build time by Vercel.
+  const bookingEnabled = process.env.NEXT_PUBLIC_CARRIER_BOOKING_ENABLED === 'true'
+
   if (!rate) {
     return (
       <div className="text-center py-12">
@@ -198,7 +203,23 @@ export function PaymentStep({
 
       {/* Action Buttons */}
       <div className="flex justify-center">
-        {isPaymentDone ? (
+        {!bookingEnabled ? (
+          <div className="text-center max-w-md">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+              <span className="font-poppins text-sm font-medium text-amber-700">
+                Online booking is being activated
+              </span>
+            </div>
+            <p className="font-poppins text-sm text-[#666666]">
+              We&apos;re finalizing our carrier booking integration. To book this shipment now,
+              please call us at{" "}
+              <a href="tel:+15023853399" className="text-[--brand-primary] font-semibold">
+                (502) 385-3399
+              </a>.
+            </p>
+          </div>
+        ) : isPaymentDone ? (
           <Button
             type="button"
             onClick={onSubmitBooking}

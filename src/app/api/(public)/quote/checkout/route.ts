@@ -7,6 +7,16 @@ import { rateLimit, getClientIp, RATE_LIMIT_PRESETS } from '@/server/utils/rate-
 
 export async function POST(request: NextRequest) {
   try {
+    // ── Booking gate ──────────────────────────────────────────────
+    // Prevent payment collection until the full carrier booking
+    // pipeline (carrier shipment booking, BOL generation) is wired.
+    // Flip CARRIER_BOOKING_ENABLED=true in Vercel env to activate.
+    if (process.env.CARRIER_BOOKING_ENABLED !== 'true') {
+      return NextResponse.json(
+        { success: false, error: 'Online booking is being activated. Please call (502) 385-3399 to book your shipment.', code: 'BOOKING_DISABLED' },
+        { status: 503 }
+      )
+    }
     const clientIp = getClientIp(request)
     const rateLimitResult = rateLimit(`checkout:${clientIp}`, RATE_LIMIT_PRESETS.CHECKOUT)
     if (!rateLimitResult.allowed) return NextResponse.json({ success: false, error: 'Too many requests. Please wait before trying again.' }, { status: 429, headers: { 'Retry-After': String(Math.ceil(rateLimitResult.resetIn / 1000)) } })

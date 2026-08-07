@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateRequest, handleApiError } from '@/server/middlewares'
-import { quoteRateRequestSchema, transformToGTZShipRequest } from '@/server/validations/quote.validation'
-import { getRates, normalizeRateResponse } from '@/server/services/gtzship.service'
+import { quoteRateRequestSchema } from '@/server/validations/quote.validation'
+import { getCarrierProvider } from '@/server/services/carriers'
 import { createCrmLead } from '@/server/services/odoo.service'
 import { rateLimit, getClientIp, RATE_LIMIT_PRESETS } from '@/server/utils/rate-limiter'
 
@@ -12,11 +12,11 @@ export async function POST(request: NextRequest) {
     if (!rateLimitResult.allowed) return NextResponse.json({ success: false, error: 'Too many requests. Please wait before requesting another quote.', message: 'Rate limit exceeded' }, { status: 429, headers: { 'Retry-After': String(Math.ceil(rateLimitResult.resetIn / 1000)), 'X-RateLimit-Limit': String(RATE_LIMIT_PRESETS.QUOTE_RATE.maxRequests), 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': String(Math.ceil(rateLimitResult.resetIn / 1000)) } })
     const validation = await validateRequest(request, quoteRateRequestSchema)
     if (!validation.success) return NextResponse.json(validation.error, { status: 400 })
-    const customerId = process.env.GTZSHIP_CUSTOMER_ID
-    if (!customerId) return NextResponse.json({ success: false, error: 'Quote service is not configured. Please contact support.' }, { status: 500 })
-    const gtzshipRequest = transformToGTZShipRequest(validation.data!, customerId)
-    const gtzshipResponse = await getRates(gtzshipRequest)
-    const normalizedData = normalizeRateResponse(gtzshipResponse)
+    // ── Carrier provider abstraction ──────────────────────────────
+    // The provider is selected via CARRIER_PROVIDER env var (default: gtz).
+    // Each provider owns auth + request/response transformation.
+    const provider = getCarrierProvider()
+    const normalizedData = await provider.getRates(validation.data!)
     if (normalizedData.lowestCost) {
       const reqData = validation.data!
       const origin = reqData.origin
