@@ -64,7 +64,7 @@ function getRedirectUri(): string {
 }
 
 /** Riven billing API resource indicator (audience). */
-const RIVEN_RESOURCE = 'https://api.rivenai.io/v1';
+const RIVEN_RESOURCE = 'https://api.rivenai.io';
 
 // ---------------------------------------------------------------------------
 // Types
