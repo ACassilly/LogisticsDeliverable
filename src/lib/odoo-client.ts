@@ -63,26 +63,32 @@ export async function odooRead(
 
 /**
  * Create a new record in Odoo model
+ * Odoo 19 JSON-2 API uses vals_list (model_create_multi) for create
  */
 export async function odooCreate(
   model: string,
   values: Record<string, any>
 ): Promise<number> {
-  const payload = { values };
+  const payload = { vals_list: [values] };
   const result = await jsonApi(`${model}/create`, 'POST', payload);
+  // JSON-2 create returns a list of IDs for model_create_multi
+  if (Array.isArray(result)) {
+    return result[0];
+  }
   return result.id;
 }
 
 /**
  * Update records in Odoo model
+ * Odoo 19 JSON-2 API uses vals (not values) for write
  */
 export async function odooWrite(
   model: string,
   ids: number[],
   values: Record<string, any>
 ): Promise<boolean> {
-  const payload = { ids, values };
-  await jsonApi(`${model}/write`, 'POST', payload);
+  const payload = { vals: values };
+  await jsonApi(`${model}/${ids.join(',')}/write`, 'POST', payload);
   return true;
 }
 
