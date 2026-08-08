@@ -1,172 +1,151 @@
 /**
  * Email service — Portlandia Logistics
  *
- * Uses Microsoft Graph app-only sendMail when GRAPH_MAIL_* env vars are set.
- * Falls back to nodemailer/Gmail SMTP when only GMAIL_* are set (dev).
+ * DEFECT-10: Replaces Microsoft Graph sendMail + nodemailer/Gmail fallback
+ * with the Riven Mail endpoint (auth-provisioner email service).
  *
- * Required env for Graph path:
- *   GRAPH_MAIL_TENANT_ID
- *   GRAPH_MAIL_CLIENT_ID
- *   GRAPH_MAIL_CLIENT_SECRET
- *   GRAPH_MAIL_SENDER            e.g. operations@portlandiaelectric.supply
- *   GMAIL_FROM                   friendly from header (optional)
+ *   POST {RIVEN_MAIL_URL}/emails/send
+ *   Header: x-internal-auth: <secret>
+ *   Body:   { to, subject, html, fields: { from_name, from_email } }
+ *   Resp:   { ok: true, smtp: "..." }
  *
- * Required env for legacy SMTP path:
- *   GMAIL_USER
- *   GMAIL_APP_PASSWORD
- *   GMAIL_FROM                   (optional)
+ * The internal secret is read from the Docker secret mounted at
+ * `/run/secrets/riven-auth-provisioner-internal-secret`, falling back to the
+ * `RIVEN_AUTH_PROVISIONER_SECRET` env var.
+ *
+ * Env vars:
+ *   RIVEN_MAIL_URL                    (default: http://riven-platform_riven-auth-provisioner:8420)
+ *   RIVEN_AUTH_PROVISIONER_SECRET     (or the Docker secret file)
+ *   RIVEN_MAIL_FROM_EMAIL             sender address (default: noreply@portlandialogistics.com)
+ *   RIVEN_MAIL_FROM_NAME              sender display name (default: Portlandia Logistics)
  */
 
-import nodemailer from 'nodemailer'
-import type { Transporter } from 'nodemailer'
+import { readFileSync } from 'node:fs';
 
 // -----------------------------------------------------------------------------
-// Graph app-only token cache
+// Configuration
 // -----------------------------------------------------------------------------
 
-interface CachedToken {
-  token: string
-  expiresAt: number
+function getMailUrl(): string {
+  return (
+    process.env.RIVEN_MAIL_URL || 'http://riven-platform_riven-auth-provisioner:8420'
+  ).replace(/\/$/, '');
 }
 
-let cachedToken: CachedToken | null = null
+const SECRET_FILE = '/run/secrets/riven-auth-provisioner-internal-secret';
 
-async function getGraphToken(): Promise<string> {
-  const tenantId = process.env.GRAPH_MAIL_TENANT_ID
-  const clientId = process.env.GRAPH_MAIL_CLIENT_ID
-  const clientSecret = process.env.GRAPH_MAIL_CLIENT_SECRET
+/**
+ * Resolve the internal auth secret. Reads the Docker secret file first, then
+ * falls back to the env var. Cached after first read.
+ */
+let cachedSecret: string | undefined;
+function getInternalSecret(): string {
+  if (cachedSecret !== undefined) return cachedSecret;
+  // Try the Docker secret file.
+  try {
+    const fileSecret = readFileSync(SECRET_FILE, 'utf8').trim();
+    if (fileSecret) {
+      cachedSecret = fileSecret;
+      return cachedSecret;
+    }
+  } catch {
+    // File not present (e.g. local dev) — fall through to env var.
+  }
+  cachedSecret = process.env.RIVEN_AUTH_PROVISIONER_SECRET || '';
+  return cachedSecret;
+}
 
-  if (!tenantId || !clientId || !clientSecret) {
+function getFromEmail(): string {
+  return process.env.RIVEN_MAIL_FROM_EMAIL || 'noreply@portlandialogistics.com';
+}
+
+function getFromName(): string {
+  return process.env.RIVEN_MAIL_FROM_NAME || 'Portlandia Logistics';
+}
+
+/**
+ * Whether the Riven Mail service is configured (secret present). Used by the
+ * OTP route to decide whether to attempt sending.
+ */
+export function isEmailConfigured(): boolean {
+  return getInternalSecret().length > 0;
+}
+
+// -----------------------------------------------------------------------------
+// Public send primitive
+// -----------------------------------------------------------------------------
+
+interface SendEmailArgs {
+  to: string | string[];
+  subject: string;
+  html?: string;
+  text?: string;
+  fromName?: string;
+}
+
+/**
+ * Send an email through the Riven Mail (auth-provisioner) endpoint.
+ *
+ * Accepts `{ ok: true, smtp: "..." }` as a success response.
+ */
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  text,
+  fromName,
+}: SendEmailArgs): Promise<void> {
+  const secret = getInternalSecret();
+  if (!secret) {
     throw new Error(
-      'Graph mail is not configured. Set GRAPH_MAIL_TENANT_ID, GRAPH_MAIL_CLIENT_ID, GRAPH_MAIL_CLIENT_SECRET.'
-    )
+      'Riven Mail is not configured. Set RIVEN_AUTH_PROVISIONER_SECRET or mount the riven-auth-provisioner-internal-secret Docker secret.'
+    );
   }
 
-  // Reuse cached token if it has more than 5 min of life left
-  if (cachedToken && cachedToken.expiresAt > Date.now() + 5 * 60 * 1000) {
-    return cachedToken.token
-  }
-
-  const params = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    grant_type: 'client_credentials',
-    scope: 'https://graph.microsoft.com/.default',
-  })
-
-  const res = await fetch(
-    `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
-    { method: 'POST', body: params }
-  )
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    throw new Error(`[Graph] token endpoint returned ${res.status}: ${text.slice(0, 300)}`)
-  }
-
-  const json = (await res.json()) as { access_token: string; expires_in: number }
-  if (!json.access_token) {
-    throw new Error('[Graph] token response missing access_token')
-  }
-
-  cachedToken = {
-    token: json.access_token,
-    expiresAt: Date.now() + (json.expires_in ?? 3600) * 1000,
-  }
-  return cachedToken.token
-}
-
-interface GraphSendMailArgs {
-  to: string | string[]
-  subject: string
-  html?: string
-  text?: string
-  fromName?: string
-}
-
-async function graphSendMail({ to, subject, html, text, fromName }: GraphSendMailArgs): Promise<void> {
-  const sender = process.env.GRAPH_MAIL_SENDER
-  if (!sender) {
-    throw new Error('GRAPH_MAIL_SENDER env var is required to send via Graph.')
-  }
-
-  const token = await getGraphToken()
-  const toList = Array.isArray(to) ? to : [to]
+  const toList = Array.isArray(to) ? to : [to];
+  const fromNameResolved = fromName ?? getFromName();
 
   const body = {
-    message: {
-      subject,
-      body: html
-        ? { contentType: 'HTML', content: html }
-        : { contentType: 'Text', content: text ?? '' },
-      toRecipients: toList.map((addr) => ({ emailAddress: { address: addr } })),
-      ...(fromName
-        ? { from: { emailAddress: { address: sender, name: fromName } } }
-        : {}),
+    to: toList,
+    subject,
+    html: html ?? text ?? '',
+    fields: {
+      from_name: fromNameResolved,
+      from_email: getFromEmail(),
     },
-    saveToSentItems: true,
+  };
+
+  const res = await fetch(`${getMailUrl()}/emails/send`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-internal-auth': secret,
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`[Riven Mail] /emails/send returned ${res.status}: ${text.slice(0, 400)}`);
   }
 
-  const res = await fetch(
-    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(sender)}/sendMail`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
+  // Accept `{ ok: true, smtp: "..." }` as success. Non-JSON 2xx is also fine.
+  try {
+    const data = (await res.json()) as { ok?: boolean; smtp?: string };
+    if (data && data.ok === false) {
+      throw new Error(`[Riven Mail] send reported failure: ${JSON.stringify(data)}`);
     }
-  )
-
-  if (res.status !== 202) {
-    const bodyText = await res.text().catch(() => '')
-    throw new Error(`[Graph] sendMail returned ${res.status}: ${bodyText.slice(0, 400)}`)
+  } catch (err) {
+    // If the body wasn't JSON but the status was 2xx, treat as success.
+    if (err instanceof SyntaxError) return;
+    throw err;
   }
 }
 
-function useGraph(): boolean {
-  return !!(
-    process.env.GRAPH_MAIL_TENANT_ID &&
-    process.env.GRAPH_MAIL_CLIENT_ID &&
-    process.env.GRAPH_MAIL_CLIENT_SECRET &&
-    process.env.GRAPH_MAIL_SENDER
-  )
-}
-
 // -----------------------------------------------------------------------------
-// Legacy SMTP transporter (used only if GRAPH_MAIL_* is not configured)
-// -----------------------------------------------------------------------------
-
-let transporter: Transporter | null = null
-
-function getTransporter(): Transporter {
-  if (transporter) return transporter
-
-  const user = process.env.GMAIL_USER
-  const pass = process.env.GMAIL_APP_PASSWORD
-  if (!user || !pass) {
-    throw new Error(
-      'Email service is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local'
-    )
-  }
-
-  transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
-  })
-  return transporter
-}
-
-function friendlyFrom(): string {
-  return (
-    process.env.GMAIL_FROM ??
-    `Portlandia Logistics <${process.env.GRAPH_MAIL_SENDER ?? process.env.GMAIL_USER ?? 'noreply@portlandialogistics.com'}>`
-  )
-}
-
-// -----------------------------------------------------------------------------
-// Public API
+// OTP email
 // -----------------------------------------------------------------------------
 
 function buildOtpHtml(otp: string): string {
@@ -201,26 +180,15 @@ function buildOtpHtml(otp: string): string {
     </tr>
   </table>
 </body>
-</html>`
+</html>`;
 }
 
 export async function sendOtpEmail({ to, otp }: { to: string; otp: string }): Promise<void> {
-  const subject = `Your Portlandia Logistics verification code: ${otp}`
-  const html = buildOtpHtml(otp)
-  const text = `Your Portlandia Logistics verification code is: ${otp}\n\nThis code expires in 10 minutes.`
+  const subject = `Your Portlandia Logistics verification code: ${otp}`;
+  const html = buildOtpHtml(otp);
+  const text = `Your Portlandia Logistics verification code is: ${otp}\n\nThis code expires in 10 minutes.`;
 
-  if (useGraph()) {
-    await graphSendMail({ to, subject, html, text, fromName: 'Portlandia Logistics' })
-    return
-  }
-
-  await getTransporter().sendMail({
-    from: friendlyFrom(),
-    to,
-    subject,
-    html,
-    text,
-  })
+  await sendEmail({ to, subject, html, text, fromName: 'Portlandia Logistics' });
 }
 
 // -----------------------------------------------------------------------------
@@ -228,25 +196,27 @@ export async function sendOtpEmail({ to, otp }: { to: string; otp: string }): Pr
 // -----------------------------------------------------------------------------
 
 interface BookingEmailData {
-  email: string
-  bookingId: string
-  carrierName: string
-  totalRate: number
-  transitDays?: string | number
-  estimatedDeliveryDate?: string
-  serviceType?: string
-  pickup: { city: string; state: string; zip: string; pickupDate: string }
-  delivery: { city: string; state: string; zip: string }
-  items: Array<{ description: string; weight: number; productClass: number | string; pieceCount: number }>
-  charges: Array<{ name: string; amount: number }>
+  email: string;
+  bookingId: string;
+  carrierName: string;
+  totalRate: number;
+  transitDays?: string | number;
+  estimatedDeliveryDate?: string;
+  serviceType?: string;
+  pickup: { city: string; state: string; zip: string; pickupDate: string };
+  delivery: { city: string; state: string; zip: string };
+  items: Array<{ description: string; weight: number; productClass: number | string; pieceCount: number }>;
+  charges: Array<{ name: string; amount: number }>;
 }
 
+export type { BookingEmailData };
+
 function formatCurrency(n: number): string {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function buildBookingConfirmationHtml(data: BookingEmailData): string {
-  const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0)
+  const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0);
   const rows = data.items
     .map(
       (item) => `
@@ -256,7 +226,7 @@ function buildBookingConfirmationHtml(data: BookingEmailData): string {
           <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">Class ${item.productClass}</td>
         </tr>`
     )
-    .join('')
+    .join('');
 
   const chargeRows = data.charges
     .map(
@@ -266,7 +236,7 @@ function buildBookingConfirmationHtml(data: BookingEmailData): string {
           <td style="padding:6px 12px;text-align:right;color:#555;">$${formatCurrency(c.amount)}</td>
         </tr>`
     )
-    .join('')
+    .join('');
 
   return `<!doctype html>
 <html>
@@ -324,13 +294,13 @@ function buildBookingConfirmationHtml(data: BookingEmailData): string {
     </tr>
   </table>
 </body>
-</html>`
+</html>`;
 }
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData): Promise<void> {
-  const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0)
-  const subject = `Booking Confirmed — ${data.pickup.city}, ${data.pickup.state} → ${data.delivery.city}, ${data.delivery.state} | ${totalWeight} lbs`
-  const html = buildBookingConfirmationHtml(data)
+  const totalWeight = data.items.reduce((sum, item) => sum + item.weight, 0);
+  const subject = `Booking Confirmed — ${data.pickup.city}, ${data.pickup.state} → ${data.delivery.city}, ${data.delivery.state} | ${totalWeight} lbs`;
+  const html = buildBookingConfirmationHtml(data);
   const text = [
     `Booking Confirmed!`,
     ``,
@@ -345,18 +315,7 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData): Prom
     `Need help? Call +1 479-450-7010`,
   ]
     .filter(Boolean)
-    .join('\n')
+    .join('\n');
 
-  if (useGraph()) {
-    await graphSendMail({ to: data.email, subject, html, text, fromName: 'Portlandia Logistics' })
-    return
-  }
-
-  await getTransporter().sendMail({
-    from: friendlyFrom(),
-    to: data.email,
-    subject,
-    html,
-    text,
-  })
+  await sendEmail({ to: data.email, subject, html, text, fromName: 'Portlandia Logistics' });
 }
