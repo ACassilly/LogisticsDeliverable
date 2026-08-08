@@ -43,7 +43,11 @@ export {
   createCheckoutSession,
   verifyCheckoutSession,
   constructWebhookEvent,
-} from './stripe.service';
+  getAccessTokenFromRequest,
+  type CreateCheckoutParams,
+  type VerifyResult,
+  type RivenBillingWebhookEvent,
+} from './riven-billing.service';
 
 export {
   createBooking,
