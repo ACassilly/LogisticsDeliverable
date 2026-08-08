@@ -1,5 +1,5 @@
 const ODOO_URL = process.env.ODOO_URL || 'https://id.portlandialogistics.com';
-const ODOO_DB = process.env.ODOO_DB || 'portlandia_logistics';
+const ODOO_DB = process.env.ODOO_DB || 'pes_crm';
 const ODOO_API_KEY = process.env.ODOO_API_KEY || '';
 
 /**
@@ -43,7 +43,7 @@ export async function odooSearchRead(
     domain,
     fields: fields.length > 0 ? fields : undefined,
   };
-  return jsonApi(`model/${model}/read_group`, 'POST', payload);
+  return jsonApi(`${model}/read_group`, 'POST', payload);
 }
 
 /**
@@ -58,7 +58,7 @@ export async function odooRead(
     ids,
     fields: fields.length > 0 ? fields : undefined,
   };
-  return jsonApi(`model/${model}/read`, 'POST', payload);
+  return jsonApi(`${model}/read`, 'POST', payload);
 }
 
 /**
@@ -69,7 +69,7 @@ export async function odooCreate(
   values: Record<string, any>
 ): Promise<number> {
   const payload = { values };
-  const result = await jsonApi(`model/${model}/create`, 'POST', payload);
+  const result = await jsonApi(`${model}/create`, 'POST', payload);
   return result.id;
 }
 
@@ -82,7 +82,7 @@ export async function odooWrite(
   values: Record<string, any>
 ): Promise<boolean> {
   const payload = { ids, values };
-  await jsonApi(`model/${model}/write`, 'POST', payload);
+  await jsonApi(`${model}/write`, 'POST', payload);
   return true;
 }
 

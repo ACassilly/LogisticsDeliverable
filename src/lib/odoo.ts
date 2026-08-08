@@ -5,7 +5,7 @@
  */
 
 const ODOO_URL = process.env.ODOO_URL || 'https://id.portlandialogistics.com';
-const ODOO_DB = process.env.ODOO_DB || 'portlandia_logistics';
+const ODOO_DB = process.env.ODOO_DB || 'pes_crm';
 const ODOO_USERNAME = process.env.ODOO_USERNAME || '';
 const ODOO_PASSWORD = process.env.ODOO_API_KEY || '';
 
