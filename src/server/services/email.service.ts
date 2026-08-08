@@ -6,8 +6,16 @@
  *
  *   POST {RIVEN_MAIL_URL}/emails/send
  *   Header: x-internal-auth: <secret>
- *   Body:   { to, subject, html, fields: { from_name, from_email } }
+ *   Body:   { template, subject, to, name?, fields? }
  *   Resp:   { ok: true, smtp: "..." }
+ *
+ * The auth-provisioner loads HTML templates from /opt/riven/email-templates/
+ * and merges {{key}} placeholders from the `fields` object. We use the
+ * `generic` template which renders `{{content}}` as-is, allowing arbitrary
+ * HTML emails.
+ *
+ * The `to` field must be a single email string (not an array). For multiple
+ * recipients, we send individual requests.
  *
  * The internal secret is read from the Docker secret mounted at
  * `/run/secrets/riven-auth-provisioner-internal-secret`, falling back to the
@@ -103,45 +111,50 @@ export async function sendEmail({
   }
 
   const toList = Array.isArray(to) ? to : [to];
-  const fromNameResolved = fromName ?? getFromName();
+  const content = html ?? text ?? '';
 
-  const body = {
-    to: toList,
-    subject,
-    html: html ?? text ?? '',
-    fields: {
-      from_name: fromNameResolved,
-      from_email: getFromEmail(),
-    },
-  };
+  // The auth-provisioner accepts a single `to` string per request.
+  // For multiple recipients, send individual requests in parallel.
+  await Promise.all(
+    toList.map((recipient) => {
+      const body = {
+        template: 'generic',
+        subject,
+        to: recipient,
+        name: fromName ?? getFromName(),
+        fields: {
+          content,
+          from_name: fromName ?? getFromName(),
+          from_email: getFromEmail(),
+        },
+      };
 
-  const res = await fetch(`${getMailUrl()}/emails/send`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-internal-auth': secret,
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(body),
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`[Riven Mail] /emails/send returned ${res.status}: ${text.slice(0, 400)}`);
-  }
-
-  // Accept `{ ok: true, smtp: "..." }` as success. Non-JSON 2xx is also fine.
-  try {
-    const data = (await res.json()) as { ok?: boolean; smtp?: string };
-    if (data && data.ok === false) {
-      throw new Error(`[Riven Mail] send reported failure: ${JSON.stringify(data)}`);
-    }
-  } catch (err) {
-    // If the body wasn't JSON but the status was 2xx, treat as success.
-    if (err instanceof SyntaxError) return;
-    throw err;
-  }
+      return fetch(`${getMailUrl()}/emails/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-auth': secret,
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(body),
+        cache: 'no-store',
+      }).then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          throw new Error(`[Riven Mail] /emails/send returned ${res.status}: ${text.slice(0, 400)}`);
+        }
+        try {
+          const data = (await res.json()) as { ok?: boolean; smtp?: string };
+          if (data && data.ok === false) {
+            throw new Error(`[Riven Mail] send reported failure: ${JSON.stringify(data)}`);
+          }
+        } catch (err) {
+          if (err instanceof SyntaxError) return;
+          throw err;
+        }
+      });
+    })
+  );
 }
 
 // -----------------------------------------------------------------------------
