@@ -1,17 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleApiError, validateRequest } from '@/server/middlewares';
-import { registerSchema } from '@/server/validations';
-import { registerUser } from '@/server/services';
-import { generateToken } from '@/server/middlewares/auth';
-import { ROLE_PORTAL_MAP, UserRole } from '@/types';
 
+/**
+ * POST /api/(auth)/register — DEPRECATED
+ *
+ * Self-registration is now handled by Logto (Riven Auth) SSO. New users are
+ * provisioned through the Logto sign-in flow and mapped to the SHIPPER role
+ * by default (ADMIN when their email matches ADMIN_EMAILS). This endpoint is
+ * kept for backwards compatibility and responds with a 410 (Gone) deprecation
+ * notice pointing clients to the new SSO flow.
+ */
 export async function POST(request: NextRequest) {
-  try {
-    const validation = await validateRequest(request, registerSchema);
-    if (!validation.success) return NextResponse.json(validation.error, { status: 400 });
-    const user = await registerUser(validation.data!);
-    const token = generateToken({ id: user._id, email: user.email, role: user.role, name: user.name });
-    const portalUrl = ROLE_PORTAL_MAP[UserRole.SHIPPER];
-    return NextResponse.json({ success: true, data: { token, portalUrl, user: { id: user._id, email: user.email, name: user.name, role: user.role } }, message: 'Account created successfully' }, { status: 201 });
-  } catch (error) { return handleApiError(error) }
+  return NextResponse.json(
+    {
+      success: false,
+      error: 'Deprecated',
+      message:
+        'Self-registration has been replaced by Riven Auth (Logto) SSO. Redirect to GET /api/auth/login to create an account via Logto.',
+      redirectTo: '/api/auth/login',
+    },
+    { status: 410 }
+  );
+}
+
+/**
+ * GET /api/(auth)/register — convenience redirect to the new SSO flow.
+ */
+export async function GET(request: NextRequest) {
+  return NextResponse.redirect(new URL('/api/auth/login', request.url));
 }

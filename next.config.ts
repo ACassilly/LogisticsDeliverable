@@ -11,11 +11,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.portlandialogistics.com', port: '', pathname: '/**' },
     ],
   },
-    typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
+  typescript: {
+    ignoreBuildErrors: false,
   },
 
 };

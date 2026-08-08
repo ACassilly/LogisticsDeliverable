@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth, handleApiError } from '@/server/middlewares';
-import { getUserById } from '@/server/services';
 
+/**
+ * GET /api/(auth)/me — DEPRECATED
+ *
+ * The current-user endpoint is now `GET /api/auth/me`, which resolves the user
+ * from the Logto session cookie. This endpoint is kept for backwards
+ * compatibility and redirects there.
+ */
 export async function GET(request: NextRequest) {
-  try {
-    const authUser = await withAuth(request);
-    if (!authUser) return NextResponse.json({ success: false, error: 'Unauthorized', message: 'Authentication required' }, { status: 401 });
-    const user = await getUserById(authUser.id);
-    if (!user) return NextResponse.json({ success: false, error: 'Not Found', message: 'User not found' }, { status: 404 });
-    return NextResponse.json({ success: true, data: { id: user._id, email: user.email, name: user.name, role: user.role, lastLogin: user.lastLogin } });
-  } catch (error) { return handleApiError(error) }
+  return NextResponse.redirect(new URL('/api/auth/me', request.url));
 }

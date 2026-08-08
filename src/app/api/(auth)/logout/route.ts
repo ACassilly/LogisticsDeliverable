@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth, handleApiError } from '@/server/middlewares';
 
+/**
+ * POST /api/(auth)/logout — DEPRECATED
+ *
+ * Logout is now handled by `GET/POST /api/auth/logout`, which clears the
+ * `riven-auth-session` cookie and redirects to the Logto end_session endpoint.
+ * This endpoint is kept for backwards compatibility and redirects there.
+ */
 export async function POST(request: NextRequest) {
-  try {
-    const user = await withAuth(request);
-    if (user) console.log(`User ${user.email} logged out at ${new Date().toISOString()}`);
-    return NextResponse.json({ success: true, message: 'Logged out successfully' }, { status: 200 });
-  } catch (error) { return handleApiError(error) }
+  return NextResponse.redirect(new URL('/api/auth/logout', request.url));
+}
+
+export async function GET(request: NextRequest) {
+  return NextResponse.redirect(new URL('/api/auth/logout', request.url));
 }
