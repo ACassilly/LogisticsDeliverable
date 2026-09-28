@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  // 2026-09-28: 'export' for Cloudflare Pages static deploy (project: portlandialogistics).
+  // Azure VM/Docker standalone path is retired (subscription suspended 2026-09-05).
+  output: 'export',
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

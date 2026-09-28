@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { SERVICE_SLUGS } from '@/constants/services';
 
+// Required for output:'export' (Cloudflare Pages static deploy, 2026-09-28).
+export const dynamic = 'force-static';
+
 // Generates https://portlandialogistics.com/sitemap.xml
 // Static routes + service detail pages (SERVICE_SLUGS).
 // Blog posts (/blog/[slug]) are API-driven (NEXT_PUBLIC_API_BASE_URL) and

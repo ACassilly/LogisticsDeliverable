@@ -28,6 +28,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Ahrefs Web Analytics (project 10446306) — installed 2026-09-28, inline-wrapper pattern
+            (same as verified PES fix); plain script src + data-key gets mangled by tag managers. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){if(document.querySelector('script[data-key="lPkTRw3cRN7xuYRRdwNh8g"]'))return;var s=document.createElement("script");s.src="https://analytics.ahrefs.com/analytics.js";s.setAttribute("data-key","lPkTRw3cRN7xuYRRdwNh8g");s.async=true;document.head.appendChild(s);})();`,
+          }}
+        />
+      </head>
       <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           {children}
