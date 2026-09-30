@@ -62,3 +62,18 @@ export {
   createOdooSaleOrder,
   testOdooConnection,
 } from './odoo.service';
+
+export {
+  validateSupplierFill,
+  computeLandedCost,
+  applyResaleMargin,
+  totalLandedFromFill,
+  canChargeAfterBooking,
+  UL_REQUIRED_CATEGORIES,
+} from './supplier-fill.service';
+export type {
+  SupplierFill,
+  FillCert,
+  HazmatClass,
+  LandedCostBreakdown,
+} from './supplier-fill.service';
