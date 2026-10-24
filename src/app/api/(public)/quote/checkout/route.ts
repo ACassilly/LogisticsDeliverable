@@ -3,6 +3,8 @@ import { validateRequest, handleApiError } from '@/server/middlewares'
 import { checkoutSchema } from '@/server/validations/stripe.validation'
 import { createCheckoutSession, getAccessTokenFromRequest } from '@/server/services/riven-billing.service'
 import { createBooking } from '@/server/services/booking.service'
+import { canChargeAfterBooking } from '@/server/services/supplier-fill.service'
+import { PES_FLEET_CARRIER_CODE } from '@/server/services/pes-fleet-overflow.service'
 import { rateLimit, getClientIp, RATE_LIMIT_PRESETS } from '@/server/utils/rate-limiter'
 
 export async function POST(request: NextRequest) {
@@ -23,6 +25,18 @@ export async function POST(request: NextRequest) {
     const validation = await validateRequest(request, checkoutSchema)
     if (!validation.success) return NextResponse.json(validation.error, { status: 400 })
     const data = validation.data!
+
+    // ── Money-Path Carrier Acceptance & BOL Gate (PR #6) ──────────────
+    // Payment follows carrier acceptance: require a real carrier BOL & PRO
+    // before creating a checkout session.
+    const bolHeader = request.headers.get('x-carrier-bol') ?? undefined
+    const proHeader = request.headers.get('x-carrier-pro') ?? undefined
+    if (!canChargeAfterBooking({ bol: bolHeader, pro: proHeader })) {
+      return NextResponse.json(
+        { success: false, error: 'Online payment requires a confirmed carrier BOL and PRO number. Please call (502) 385-3399 to book your shipment.', code: 'BOOKING_DISABLED' },
+        { status: 503 }
+      )
+    }
 
     // Resolve the caller's Riven (Logto) access token to authorize the
     // billing call. Public (unauthenticated) checkout falls back to a

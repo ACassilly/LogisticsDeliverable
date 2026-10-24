@@ -77,3 +77,13 @@ export type {
   HazmatClass,
   LandedCostBreakdown,
 } from './supplier-fill.service';
+
+export {
+  PES_FLEET_CARRIER_CODE,
+  PES_FLEET_CARRIER_NAME,
+  PES_OVERFLOW_SERVICE_TYPE,
+  evaluatePesFleetOverflow,
+  attachPesFleetOverflowOption,
+} from './pes-fleet-overflow.service';
+export type { PesFleetEvaluation } from './pes-fleet-overflow.service';
+
