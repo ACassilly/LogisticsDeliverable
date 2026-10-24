@@ -62,3 +62,28 @@ export {
   createOdooSaleOrder,
   testOdooConnection,
 } from './odoo.service';
+
+export {
+  validateSupplierFill,
+  computeLandedCost,
+  applyResaleMargin,
+  totalLandedFromFill,
+  canChargeAfterBooking,
+  UL_REQUIRED_CATEGORIES,
+} from './supplier-fill.service';
+export type {
+  SupplierFill,
+  FillCert,
+  HazmatClass,
+  LandedCostBreakdown,
+} from './supplier-fill.service';
+
+export {
+  PES_FLEET_CARRIER_CODE,
+  PES_FLEET_CARRIER_NAME,
+  PES_OVERFLOW_SERVICE_TYPE,
+  evaluatePesFleetOverflow,
+  attachPesFleetOverflowOption,
+} from './pes-fleet-overflow.service';
+export type { PesFleetEvaluation } from './pes-fleet-overflow.service';
+

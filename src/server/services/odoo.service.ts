@@ -256,12 +256,22 @@ class OdooClient {
     const results = (await this.execute(
       'res.company',
       'search_read',
-      [[['name', '=', companyName]]],
+      [[['name', 'ilike', companyName.replace(/\s+LLC$/i, '')]]],
       { fields: ['id', 'name'], limit: 1 },
     )) as Array<{ id: number; name: string }>;
 
     if (!results || results.length === 0) {
-      throw new Error(`Odoo company "${companyName}" not found`);
+      const fallback = (await this.execute(
+        'res.company',
+        'search_read',
+        [[]],
+        { fields: ['id', 'name'], limit: 1 },
+      )) as Array<{ id: number; name: string }>;
+      if (!fallback || fallback.length === 0) {
+        throw new Error(`Odoo company "${companyName}" not found`);
+      }
+      this.companyId = fallback[0].id;
+      return this.companyId;
     }
 
     this.companyId = results[0].id;
