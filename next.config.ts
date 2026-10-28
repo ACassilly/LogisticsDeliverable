@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // 2026-09-28: 'export' for Cloudflare Pages static deploy (project: portlandialogistics).
-  // Azure VM/Docker standalone path is retired (subscription suspended 2026-09-05).
-  output: 'export',
+  // 2026-10-28: Canonical Riven Engine standalone container deploy via scm.rivenai.io/portlandia-logistics/storefront.
+  output: 'standalone',
   images: {
     unoptimized: true,
     dangerouslyAllowSVG: true,
