@@ -119,4 +119,4 @@ verify-storefront:
   script:
     - docker exec portlandia-logistics-web wget -qO- http://127.0.0.1:3000/api/health | grep -q '"success":true'
     - docker exec portlandia-logistics-web wget -qO- http://127.0.0.1:3000/ | grep -q 'Ship Smarter'
-    - echo "REAL-PROOF: portlandia-logistics-web healthy on origin-1 :3013"
+    - 'echo "REAL-PROOF: portlandia-logistics-web healthy on origin-1 :3013"'
