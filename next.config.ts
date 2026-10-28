@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   // Azure VM/Docker standalone path is retired (subscription suspended 2026-09-05).
   output: 'export',
   images: {
+    unoptimized: true,
     dangerouslyAllowSVG: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com', port: '', pathname: '/**' },
