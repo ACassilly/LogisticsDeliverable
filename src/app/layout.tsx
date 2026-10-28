@@ -29,6 +29,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* GA4 (Portlandia Logistics - GA4, Cassilly Capital) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9964QYZ08G" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-9964QYZ08G');`,
+          }}
+        />
+        {/* Microsoft Clarity (portlandialogistics.com project z07bcb47t2) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "z07bcb47t2");`,
+          }}
+        />
         {/* Ahrefs Web Analytics (project 10446306) — installed 2026-09-28, inline-wrapper pattern
             (same as verified PES fix); plain script src + data-key gets mangled by tag managers. */}
         <script
