@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /portal/admin
+
+Sitemap: https://portlandialogistics.com/sitemap.xml

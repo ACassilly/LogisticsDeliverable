@@ -1,0 +1,8 @@
+# Portlandia Logistics (https://portlandialogistics.com)
+> Dual-Engine Commercial Freight Platform: 65+ Carrier 3PL LTL Network (WWEX / GlobalTranz) + Dedicated 26-Ft Straight Box Truck Asset-Based Overflow (Portlandia Electric Supply, LLC Fleet · USDOT #7728111 · Jeffersonville IN 47130 / Louisville KY 40202).
+
+## Core Pages & Calculators
+- Instant Dual-Lane Freight Quoter: https://portlandialogistics.com/quote
+- State & City Freight Terminal Directory: https://portlandialogistics.com/locations
+- Origin-to-Destination Pallet Rate Corridors: https://portlandialogistics.com/lanes
+- Dedicated 26-Ft Straight Box Truck Service: https://portlandialogistics.com/modes/26-ft-straight-box-truck

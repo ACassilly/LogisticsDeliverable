@@ -75,7 +75,7 @@ export function evaluatePesFleetOverflow(
   const assignedUnitVin = liftgateRequired ? '3HAMMAAL9DL162928' : '3HAMMAAL1EL772145'
   const assignedUnitLabel = liftgateRequired
     ? '2013 International 4300 26-Ft Liftgate Box (VIN 3HAMMAAL9DL162928)'
-    : '2014 International 4300 26-Ft Dock-High Box (VIN 3HAMMAAL1EL772145 · IN Title #26371206000287 · Plate #309694896)'
+    : '2014 International 4300 26-Ft Dock-High Box (VIN 3HAMMAAL1EL772145)'
 
   const originZip = req.origin.zip.trim()
   const destZip = req.destination.zip.trim()
@@ -159,7 +159,7 @@ export function evaluatePesFleetOverflow(
     quoteId,
     carrierName: PES_FLEET_CARRIER_NAME,
     carrierCode: PES_FLEET_CARRIER_CODE,
-    onTimePercentage: '99.5%',
+    onTimePercentage: 'N/A',
     totalRate: rateUsd,
     transitDays: '1',
     calendarDays: '1',
